@@ -14,18 +14,14 @@ int main()
 {
     system("cls");
     int choice, numStops = 0;
-    Stop *stops = getStops("paragens.txt", &numStops);
+    Stop *stops = malloc(sizeof(Stop) * numStops);
     if (stops == NULL)
     {
-        printf("Nao foi possivel aceder ao ficheiro\n");
-        return 1;
+        printf("Erro na alocação de memória");
+        return 0;
     }
-    /*     Stop *stops = malloc(sizeof(Stop) * numStops);
-        if (stops == NULL)
-        {
-            printf("Erro na alocação de memória");
-            return 0;
-        } */
+    // Stop *stops = getStops("paragens.txt", &numStops);
+
     do
     {
         printf("\n\n--- MENU ---\n");

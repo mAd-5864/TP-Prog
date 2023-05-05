@@ -63,30 +63,32 @@ void printStops(Stop tab[], int n)
 
 Stop *getStops(char *filename, int *numStops)
 {
-    FILE *file = fopen(filename, "r"); // Open file in read mode
+    FILE *file = fopen(filename, "r");
     if (file == NULL)
-    { // Check if file opened successfully
-        printf("Failed to open file.\n");
+    {
+        printf("Erro ao abrir ficheiro\n");
         return NULL;
     }
-    Stop *stops = malloc(sizeof(Stop) * MAX_STOPS); // Allocate memory for array
+
+    Stop *stops = malloc(sizeof(Stop) * MAX_STOPS);
     if (stops == NULL)
     {
         printf("Erro na alocação de memória");
         fclose(file);
         return 0;
     }
-    *numStops = 0; // Initialize number of stops to 0
+
+    *numStops = 0;
     char line[MAX_NAME_LENGTH + 1];
     while (fgets(line, sizeof(line), file) != NULL)
-    { // Read file line by line
+    {
         if (line[strlen(line) - 1] == '\n')
-        { // Remove newline character at end of line
+        {
             line[strlen(line) - 1] = '\0';
         }
         if (*numStops >= MAX_STOPS)
-        { // Check if array is full
-            printf("Maximum number of stops reached.\n");
+        {
+            printf("Numero maximo de paragens atingido\n");
             break;
         }
         strcpy(stops[*numStops].name, line);

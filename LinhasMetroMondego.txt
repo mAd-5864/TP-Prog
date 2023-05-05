@@ -1,4 +1,4 @@
-Linha Vermelha [Pombal - Soure - Alfarelos - CoimbraB - Coimbra - CoimbraB - Pampilhosa - Mealhada - Mogofres/Anadia]
+Linha Vermelha [Pombal - Soure - Alfarelos - CoimbraB - Coimbra - Pampilhosa - Mealhada - Mogofres/Anadia]
 Linha Verde [Figueira da Foz - Bifurcação de Lares - Alfarelos - CoimbraB - Coimbra]
 Linha Verde Auxiliar [Louriçal - Bifurcação de Lares]
 Linha Azul [Figueira da Foz - Cantanhede - Pampilhosa]
