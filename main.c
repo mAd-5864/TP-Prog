@@ -7,8 +7,8 @@
 #include <string.h>
 #include <time.h>
 #include <ctype.h>
-
 #include "stops.h"
+#include "lines.h"
 
 int main()
 {
@@ -58,7 +58,7 @@ int main()
                 do
                 {
                     stops[numStops] = addStop();
-                    for (int i = 0; i < numStops; i++)
+                    for (int i = 0; i < numStops; i++) // verificar codigos repetidos
                     {
                         if (strcmp(stops[i].codigo, stops[numStops].codigo) == 0)
                         {
@@ -74,30 +74,7 @@ int main()
             case 3: // Apagar paragem
                 system("cls");
                 printf("\n--- Apagar Paragem ---\n");
-                printf("Introduza o codigo da paragem: ");
-                char codeToDelete[MAX_CODE_LENGTH + 1];
-                fflush(stdin);
-                scanf("%s", codeToDelete);
-
-                int deleted = 0;
-                for (int i = 0; i < numStops; i++)
-                {
-                    if (strcmp(codeToDelete, stops[i].codigo) == 0)
-                    {
-                        deleted = 1;
-                        for (int j = i + 1; j < numStops; j++)
-                        {
-                            stops[j - 1] = stops[j];
-                        }
-                        numStops--;
-                        printf("\nParagem Apagada\n");
-                        break;
-                    }
-                }
-                if (!deleted)
-                {
-                    printf("\nParagem nao encontrada\n");
-                }
+                stops = deleteStop(stops, &numStops);
                 break;
             case 4: // Back to main menu
                 system("cls");
@@ -131,6 +108,7 @@ int main()
             case 2:
                 system("cls");
                 printf("\n--- Adicionar Linha ---\n");
+                addLine();
                 // TODO: Implement menu functionality for "Linhas"
                 break;
 

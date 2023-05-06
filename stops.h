@@ -1,5 +1,5 @@
-//Pedro Teixeira Amorim
-//2022157609
+// Pedro Teixeira Amorim
+// 2022157609
 
 #ifndef STOPS_H_INCLUDED
 #define STOPS_H_INCLUDED
@@ -18,7 +18,8 @@ struct Stop
 
 char *generateCode();
 Stop addStop();
-void printStop(struct Stop stop);
+void printStop(Stop stop);
 void printStops(Stop tab[], int n);
+Stop *deleteStop(Stop *stops, int *numStops);
 Stop *getStops(char *filename, int *numStops);
 #endif

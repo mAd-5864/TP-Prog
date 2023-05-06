@@ -37,7 +37,6 @@ Stop addStop()
     fflush(stdin);
     if (fgets(p.name, sizeof(p.name), stdin) != NULL)
     {
-
         size_t len = strlen(p.name);
         if (len > 0 && p.name[len - 1] == '\n')
         {
@@ -49,7 +48,7 @@ Stop addStop()
     return p;
 }
 
-void printStop(struct Stop stop)
+void printStop(Stop stop)
 {
     printf("\nNome: %s\nCodigo: %s\n", stop.name, stop.codigo);
 }
@@ -59,6 +58,34 @@ void printStops(Stop tab[], int n)
     {
         printStop(tab[i]);
     }
+}
+Stop *deleteStop(Stop *stops, int *numStops)
+{
+    printf("Introduza o codigo da paragem: ");
+    char codeToDelete[MAX_CODE_LENGTH + 1];
+    fflush(stdin);
+    scanf("%s", codeToDelete);
+
+    int deleted = 0;
+    for (int i = 0; i < *numStops; i++)
+    {
+        if (strcmp(codeToDelete, stops[i].codigo) == 0)
+        {
+            deleted = 1;
+            for (int j = i + 1; j < *numStops; j++)
+            {
+                stops[j - 1] = stops[j];
+            }
+            (*numStops)--;
+            printf("\nParagem Apagada\n");
+            break;
+        }
+    }
+    if (!deleted)
+    {
+        printf("\nParagem nao encontrada\n");
+    }
+    return stops;
 }
 
 Stop *getStops(char *filename, int *numStops)
