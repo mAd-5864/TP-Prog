@@ -66,7 +66,7 @@ Stop *deleteStop(Stop *stops, int *numStops)
     printf("Introduza o codigo da paragem: ");
     char codeToDelete[MAX_CODE_LENGTH + 1];
     fflush(stdin);
-    scanf("%s", codeToDelete);
+    scanf("%5s", codeToDelete);
 
     int deleted = 0;
     for (int i = 0; i < *numStops; i++)

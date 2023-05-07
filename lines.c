@@ -14,11 +14,21 @@ void printLine(Line line)
     system("cls");
     printf("\nLinha %s - %d Paragens\n", line.name, line.nStops);
     LineStop *stop = line.nextStop;
-    while (stop != NULL)
+
+    printf("[ %s", stop->stop.name);
+    stop = stop->nextStop;
+    for (int i = 1; i < line.nStops; i++)
     {
-        printf("%s -> ", stop->stop.name);
+        printf("  <->  %s", stop->stop.name);
         stop = stop->nextStop;
     }
+
+    /*     while (stop != NULL)
+        {
+            stop = stop->nextStop;
+            printf(" <-> %s", stop->stop.name);
+        } */
+    printf(" ]");
 }
 
 Line addLine(Stop *tab, int numStops)
@@ -51,7 +61,7 @@ Line addLine(Stop *tab, int numStops)
     LineStop *prevStop = NULL;
     for (int i = 0; i < l.nStops; i++)
     {
-        LineStop *stop = addStopToLine(tab, numStops);
+        LineStop *stop = addStopToLine(&l, tab, numStops);
         if (prevStop == NULL)
         {
             l.nextStop = stop;
@@ -66,12 +76,10 @@ Line addLine(Stop *tab, int numStops)
     return l;
 }
 
-LineStop *addStopToLine(Stop *tab, int numStops)
+LineStop *addStopToLine(Line *line, Stop *tab, int numStops)
 {
-    LineStop *stop = (LineStop *)malloc(sizeof(LineStop));
-stop->nextStop = NULL;
+    LineStop *stop = NULL;
     int flag;
-                    int tester;
     do
     {
         flag = 0;
@@ -79,7 +87,7 @@ stop->nextStop = NULL;
         printf("\nIntroduza o codigo da paragem: ");
         char codeToAdd[MAX_CODE_LENGTH + 1];
         fflush(stdin);
-        scanf("%s", codeToAdd);
+        scanf("%5s", codeToAdd);
 
         for (int i = 0; i < numStops; i++)
         {
@@ -89,10 +97,6 @@ stop->nextStop = NULL;
                 LineStop *p = stop;
                 while (p != NULL)
                 {
-                    printf("Teste||");
-                    puts(p->stop.codigo);
-
-                    scanf("%d", tester);
                     if (strcmp(codeToAdd, p->stop.codigo) == 0)
                     {
                         flag++;

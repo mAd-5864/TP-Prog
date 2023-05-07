@@ -26,6 +26,6 @@ struct Line
 
 void printLine(Line line);
 Line addLine(Stop *tab, int numStops);
-LineStop* addStopToLine(Stop *tab, int numStops);
+LineStop *addStopToLine(Line *line, Stop *tab, int numStops);
 
 #endif
