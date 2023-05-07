@@ -46,7 +46,7 @@ int main()
             {
             case 1:
                 system("cls");
-                printf("\n--- Lista das Paragens ---\n");
+
                 printStops(stops, numStops);
                 break;
 
@@ -107,8 +107,16 @@ int main()
 
             case 2:
                 system("cls");
-                printf("\n--- Adicionar Linha ---\n");
-                addLine();
+                if (numStops > 1)
+                {
+                    printf("\n--- Adicionar Linha ---\n");
+                    addLine(stops, numStops);
+                }
+                else
+                {
+                    printf("\nParagens Insuficientes");
+                }
+
                 // TODO: Implement menu functionality for "Linhas"
                 break;
 

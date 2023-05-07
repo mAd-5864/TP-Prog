@@ -44,7 +44,8 @@ Stop addStop()
         }
     }
     char *code = generateCode();
-    strncpy(p.codigo, code, MAX_CODE_LENGTH);
+    strcpy(p.codigo, code);
+    p.valid = 1;
     return p;
 }
 
@@ -54,6 +55,7 @@ void printStop(Stop stop)
 }
 void printStops(Stop tab[], int n)
 {
+    printf("\n--- Lista das Paragens ---\n");
     for (int i = 0; i < n; i++)
     {
         printStop(tab[i]);

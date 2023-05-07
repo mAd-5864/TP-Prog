@@ -12,6 +12,7 @@ typedef struct Stop Stop; // Estrutura para as paragens
 
 struct Stop
 {
+    int valid;
     char name[MAX_NAME_LENGTH];
     char codigo[MAX_CODE_LENGTH + 1];
 };
