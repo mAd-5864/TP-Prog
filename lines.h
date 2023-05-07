@@ -9,17 +9,23 @@
 #define MAX_NAME_LENGTH 20
 
 typedef struct Line Line; // Estrutura para as linhas
+typedef struct LineStop LineStop; // Estrutura para as paragens da linha
+
+struct LineStop {
+    Stop stop;
+    LineStop *nextStop;
+};
 
 struct Line
 {
     char name[MAX_NAME_LENGTH];
-    Stop stops[MAX_STOPS_LINE];
     int nStops;
-    Line *nextLine;
+    LineStop *nextStop;
+    //Line *nextLine;
 };
 
-Line addLine();
-Line addStopsToLine(Line line);
-// char **readCodes(int numCodes);
+void printLine(Line line);
+Line addLine(Stop *tab, int numStops);
+LineStop* addStopToLine(Stop *tab, int numStops);
 
 #endif
