@@ -53,19 +53,19 @@ Line addLine(Stop *tab, int numStops)
 
     } while (l->nStops > numStops);
 
-    LineStop *prevStop = NULL;
+    LineStop *saveStop = NULL;
     for (int i = 0; i < l->nStops; i++)
     {
         LineStop *stop = addStopToLine(l, tab, numStops);
-        if (prevStop == NULL)
+        if (saveStop == NULL)
         {
             l->nextStop = stop;
         }
         else
         {
-            prevStop->nextStop = stop;
+            saveStop->nextStop = stop;
         }
-        prevStop = stop;
+        saveStop = stop;
     }
     printLine(*l);
     return *l;
@@ -81,12 +81,6 @@ LineStop *addStopToLine(Line *line, Stop *tab, int numStops)
         return 0;
     };
     newStop->nextStop = NULL;
-    if (line->nextStop == NULL)
-    {
-        line->nextStop = newStop;
-    }
-    newStop->stop.codigo[0] = '\0';
-    // newStop->stop.codigo = NULL;
     int flag;
     do
     {
