@@ -73,6 +73,7 @@ int main()
 
             case 3: // Apagar paragem
                 system("cls");
+                printStops(stops, numStops);
                 printf("\n--- Apagar Paragem ---\n");
                 stops = deleteStop(stops, &numStops);
                 break;

@@ -22,49 +22,44 @@ void printLine(Line line)
         printf("  <->  %s", stop->stop.name);
         stop = stop->nextStop;
     }
-
-    /*     while (stop != NULL)
-        {
-            stop = stop->nextStop;
-            printf(" <-> %s", stop->stop.name);
-        } */
     printf(" ]");
 }
 
 Line addLine(Stop *tab, int numStops)
 {
-    Line l;
+    Line *l = malloc(sizeof(Line));
+    l->nextStop = NULL;
 
     printf("\nNome da Linha: ");
     fflush(stdin);
-    if (fgets(l.name, sizeof(l.name), stdin) != NULL)
+    if (fgets(l->name, sizeof(l->name), stdin) != NULL)
     {
-        size_t len = strlen(l.name);
-        if (len > 0 && l.name[len - 1] == '\n')
+        size_t len = strlen(l->name);
+        if (len > 0 && l->name[len - 1] == '\n')
         {
-            l.name[--len] = '\0';
+            l->name[--len] = '\0';
         }
     }
     do
     {
 
         printf("\nInsira o numero de Paragens da Linha: ");
-        scanf("%d", &l.nStops);
+        scanf("%d", &l->nStops);
         system("cls");
-        if (l.nStops > numStops)
+        if (l->nStops > numStops)
         {
             printf("\nApenas existem %d Paragens\n", numStops);
         }
 
-    } while (l.nStops > numStops);
+    } while (l->nStops > numStops);
 
     LineStop *prevStop = NULL;
-    for (int i = 0; i < l.nStops; i++)
+    for (int i = 0; i < l->nStops; i++)
     {
-        LineStop *stop = addStopToLine(&l, tab, numStops);
+        LineStop *stop = addStopToLine(l, tab, numStops);
         if (prevStop == NULL)
         {
-            l.nextStop = stop;
+            l->nextStop = stop;
         }
         else
         {
@@ -72,13 +67,26 @@ Line addLine(Stop *tab, int numStops)
         }
         prevStop = stop;
     }
-    printLine(l);
-    return l;
+    printLine(*l);
+    return *l;
 }
 
 LineStop *addStopToLine(Line *line, Stop *tab, int numStops)
 {
-    LineStop *stop = NULL;
+    int cona = 0;
+    LineStop *newStop = malloc(sizeof(LineStop));
+    if (newStop == NULL)
+    {
+        printf("Erro na alocação de memória");
+        return 0;
+    };
+    newStop->nextStop = NULL;
+    if (line->nextStop == NULL)
+    {
+        line->nextStop = newStop;
+    }
+    newStop->stop.codigo[0] = '\0';
+    // newStop->stop.codigo = NULL;
     int flag;
     do
     {
@@ -87,14 +95,14 @@ LineStop *addStopToLine(Line *line, Stop *tab, int numStops)
         printf("\nIntroduza o codigo da paragem: ");
         char codeToAdd[MAX_CODE_LENGTH + 1];
         fflush(stdin);
-        scanf("%5s", codeToAdd);
+        scanf("%4s", codeToAdd);
 
+        LineStop *p = line->nextStop;
         for (int i = 0; i < numStops; i++)
         {
             if (strcmp(codeToAdd, tab[i].codigo) == 0)
             {
                 flag++;
-                LineStop *p = stop;
                 while (p != NULL)
                 {
                     if (strcmp(codeToAdd, p->stop.codigo) == 0)
@@ -108,22 +116,16 @@ LineStop *addStopToLine(Line *line, Stop *tab, int numStops)
                 }
                 if (flag == 1)
                 {
-                    LineStop *newStop = (LineStop *)malloc(sizeof(LineStop));
-                    newStop->stop = tab[i];
-                    newStop->nextStop = NULL;
-                    if (stop == NULL)
+                    if (p != NULL)
                     {
-                        stop = newStop;
-                    }
-                    else
-                    {
-                        LineStop *p = stop;
                         while (p->nextStop != NULL)
                         {
                             p = p->nextStop;
                         }
                         p->nextStop = newStop;
                     }
+                    newStop->stop = tab[i];
+                    newStop->nextStop = NULL;
                     system("cls");
                     printf("\nParagem Adicionada\n");
                     break;
@@ -137,6 +139,5 @@ LineStop *addStopToLine(Line *line, Stop *tab, int numStops)
             printf("\nParagem nao encontrada\n");
         }
     } while (flag != 1);
-
-    return stop;
+    return newStop;
 }
