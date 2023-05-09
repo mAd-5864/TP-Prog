@@ -11,18 +11,28 @@
 
 void printLine(Line line)
 {
-    system("cls");
-    printf("\nLinha %s - %d Paragens\n", line.name, line.nStops);
+    printf("\n Linha %s - %d Paragens\n", line.name, line.nStops);
     LineStop *stop = line.nextStop;
 
     printf("[ %s", stop->stop.name);
     stop = stop->nextStop;
     for (int i = 1; i < line.nStops; i++)
     {
-        printf("  <->  %s", stop->stop.name);
+        printf("  <>  %s", stop->stop.name);
         stop = stop->nextStop;
     }
-    printf(" ]");
+    printf(" ]\n");
+}
+
+void printAllLines(LineList *first)
+{
+    printf("\n--- Lista das Linhas ---\n");
+    LineList *currentLine = first;
+    while (currentLine != NULL)
+    {
+        printLine(currentLine->line);
+        currentLine = currentLine->nextLine;
+    }
 }
 
 Line addLine(Stop *tab, int numStops)
@@ -67,6 +77,7 @@ Line addLine(Stop *tab, int numStops)
         }
         saveStop = stop;
     }
+    system("cls");
     printLine(*l);
     return *l;
 }

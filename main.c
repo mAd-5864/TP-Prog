@@ -13,8 +13,10 @@
 int main()
 {
     system("cls");
-    int choice, numStops = 0;
+    int choice, numStops = 0, numLines = 0;
     Stop *stops = malloc(sizeof(Stop) * numStops);
+    LineList *firstLine = NULL;
+    LineList *currentLine = NULL;
     if (stops == NULL)
     {
         printf("Erro na alocação de memória");
@@ -46,7 +48,6 @@ int main()
             {
             case 1:
                 system("cls");
-
                 printStops(stops, numStops);
                 break;
 
@@ -102,8 +103,7 @@ int main()
             {
             case 1:
                 system("cls");
-                printf("\n--- Lista das Linhas ---\n");
-                // TODO: Implement menu functionality for "Linhas"
+                printAllLines(firstLine);
                 break;
 
             case 2:
@@ -111,14 +111,36 @@ int main()
                 if (numStops > 1)
                 {
                     printf("\n--- Adicionar Linha ---\n");
-                    addLine(stops, numStops);
+                    LineList *newLine = malloc(sizeof(LineList));
+                    if (newLine == NULL)
+                    {
+                        printf("Erro na alocação de memória");
+                        return 0;
+                    }
+                    newLine->line = addLine(stops, numStops);
+                    newLine->nextLine = NULL;
+
+                    if (firstLine == NULL)
+                    {
+                        firstLine = newLine;
+                    }
+                    else
+                    {
+                        LineList *currentLine = firstLine;
+                        while (currentLine->nextLine != NULL)
+                        {
+                            currentLine = currentLine->nextLine;
+                        }
+                        currentLine->nextLine = newLine;
+                    }
+
+                    numLines++;
                 }
                 else
                 {
                     printf("\nParagens Insuficientes");
                 }
 
-                // TODO: Implement menu functionality for "Linhas"
                 break;
 
             case 3: // Apagar paragem
@@ -152,6 +174,7 @@ int main()
         }
     } while (choice != 4);
 
+    free(firstLine);
     free(stops);
     system("cls");
     return 0;

@@ -10,6 +10,7 @@
 
 typedef struct Line Line; // Estrutura para as linhas
 typedef struct LineStop LineStop; // Estrutura para as paragens da linha
+typedef struct LineList LineList; // Lista das Linhas
 
 struct LineStop {
     Stop stop;
@@ -21,10 +22,15 @@ struct Line
     char name[MAX_NAME_LENGTH];
     int nStops;
     LineStop *nextStop;
-    //Line *nextLine;
+};
+
+struct LineList {
+    Line line;
+    LineList *nextLine;
 };
 
 void printLine(Line line);
+void printAllLines(LineList *first);
 Line addLine(Stop *tab, int numStops);
 LineStop *addStopToLine(Line *line, Stop *tab, int numStops);
 
