@@ -26,12 +26,35 @@ void printLine(Line line)
 
 void printAllLines(LineList *first)
 {
-    printf("\n--- Lista das Linhas ---\n");
-    LineList *currentLine = first;
-    while (currentLine != NULL)
+    if (first == NULL)
     {
-        printLine(currentLine->line);
-        currentLine = currentLine->nextLine;
+        printf("\nNao existe nenhuma linha");
+    }
+    else
+    {
+        int i = 0;
+        printf("\n--- Lista das Linhas ---\n\n");
+        LineList *currentLine = first;
+        while (currentLine != NULL)
+        {
+            printf("%d - Linha %s\n", ++i, currentLine->line.name);
+            currentLine = currentLine->nextLine;
+        }
+        int choice;
+        scanf("%d", &choice);
+        i = 0;
+        currentLine = first;
+        while (currentLine != NULL)
+        {
+            i++;
+            if (choice == i)
+            {
+                system("cls");
+                printLine(currentLine->line);
+                break;
+            }
+            currentLine = currentLine->nextLine;
+        }
     }
 }
 
@@ -52,7 +75,6 @@ Line addLine(Stop *tab, int numStops)
     }
     do
     {
-
         printf("\nInsira o numero de Paragens da Linha: ");
         scanf("%d", &l->nStops);
         system("cls");
@@ -60,8 +82,11 @@ Line addLine(Stop *tab, int numStops)
         {
             printf("\nApenas existem %d Paragens\n", numStops);
         }
-
-    } while (l->nStops > numStops);
+        else if (l->nStops < 2)
+        {
+            printf("\nUma Linha deve ter pelo menos 2 Paragens\n", numStops);
+        }
+    } while (l->nStops > numStops || l->nStops < 2);
 
     LineStop *saveStop = NULL;
     for (int i = 0; i < l->nStops; i++)
