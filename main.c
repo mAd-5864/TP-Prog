@@ -149,7 +149,15 @@ int main()
                 printf("\n--- Atualizar Linha ---\n\n");
 
                 Line *selectedLine = printAllLines(firstLine);
+                if (selectedLine != NULL)
+                {
                 updateLine(selectedLine, stops, numStops);
+                }
+                else
+                {
+                    printf("Linha Invalida");
+                }
+
                 break;
 
             case 4: // Back to main menu
