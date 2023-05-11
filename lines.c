@@ -91,7 +91,7 @@ Line addLine(Stop *tab, int numStops)
     LineStop *saveStop = NULL;
     for (int i = 0; i < l->nStops; i++)
     {
-        LineStop *stop = addStopToLine(l, tab, numStops);
+        LineStop *stop = addStopToLine(l, tab, numStops, 0);
         if (saveStop == NULL)
         {
             l->nextStop = stop;
@@ -107,7 +107,7 @@ Line addLine(Stop *tab, int numStops)
     return *l;
 }
 
-LineStop *addStopToLine(Line *line, Stop *tab, int numStops)
+LineStop *addStopToLine(Line *line, Stop *tab, int numStops, int pos)
 {
     LineStop *newStop = malloc(sizeof(LineStop));
     if (newStop == NULL)
@@ -145,16 +145,46 @@ LineStop *addStopToLine(Line *line, Stop *tab, int numStops)
                 }
                 if (flag == 1)
                 {
+                    newStop->stop = tab[i];
                     if (p != NULL)
                     {
-                        while (p->nextStop != NULL)
+                        if (pos == 0)
                         {
-                            p = p->nextStop;
+                            while (p->nextStop != NULL)
+                            {
+                                printf("\nCona %d", pos);
+                                p = p->nextStop;
+                            }
+                            p->nextStop = newStop;
+                            newStop->nextStop = NULL;
                         }
-                        p->nextStop = newStop;
                     }
-                    newStop->stop = tab[i];
-                    newStop->nextStop = NULL;
+                    if (pos == 1)
+                    {
+                        newStop->nextStop = line->nextStop;
+
+                        LineStop *lastStop = newStop;
+                        while (lastStop->nextStop != NULL)
+                        {
+                            lastStop = lastStop->nextStop;
+                        }
+                        lastStop->nextStop = p;
+
+                        line->nextStop = newStop;
+                        line->nStops++;
+                    }
+                    else if (pos > 1)
+                    {
+                        LineStop *prevStop = line->nextStop;
+                        for (int j = 1; j < pos-1; j++)
+                        {
+                            prevStop = prevStop->nextStop;
+                        }
+                        newStop->nextStop = prevStop->nextStop;
+                        prevStop->nextStop = newStop;
+
+                        line->nStops++;
+                    }
                     system("cls");
                     printf("\nParagem Adicionada\n");
                     break;
@@ -216,7 +246,6 @@ void removeStopFromLine(Line *line)
 Line *updateLine(Line *selectedLine, Stop *tab, int numStops)
 {
     int choice;
-    system("cls");
     do
     {
         printf("\n--- Atualizar Linha ---\n");
@@ -228,7 +257,26 @@ Line *updateLine(Line *selectedLine, Stop *tab, int numStops)
         switch (choice)
         {
         case 1:
-            /* code */
+            system("cls");
+            if (numStops > selectedLine->nStops)
+            {
+                printLine(*selectedLine);
+                int posicaoEscolhida = 1;
+                do
+                {
+                    if (posicaoEscolhida < 1 || posicaoEscolhida > selectedLine->nStops + 1)
+                    {
+                        printf("Posicao Invalida");
+                    }
+                    printf("\nEscolha a posicao da nova Paragem (1-%d):", selectedLine->nStops + 1);
+                    scanf("%d", &posicaoEscolhida);
+                } while (posicaoEscolhida < 1 || posicaoEscolhida > selectedLine->nStops + 1);
+                addStopToLine(selectedLine, tab, numStops, posicaoEscolhida);
+            }
+            else
+            {
+                printf("Paragens Insuficientes");
+            }
             break;
 
         case 2:
@@ -239,7 +287,7 @@ Line *updateLine(Line *selectedLine, Stop *tab, int numStops)
             }
             else
             {
-                printf("A Linha %s apenas tem %d Paragens",selectedLine->name , selectedLine->nStops);
+                printf("A Linha %s apenas tem %d Paragens", selectedLine->name, selectedLine->nStops);
             }
 
             break;
