@@ -7,6 +7,7 @@
 #include <time.h>
 #include <ctype.h>
 #include "stops.h"
+#include "lines.h"
 
 char *generateCode() // Função para  gerar os codigos alfanumeéricos
 {
@@ -16,8 +17,8 @@ char *generateCode() // Função para  gerar os codigos alfanumeéricos
     code[0] = (rand() % 26) + 'A';
     for (int i = 1; i < MAX_CODE_LENGTH; i++)
     {
-        int random_num = rand() % 10;        
-            code[i] = random_num + '0';
+        int random_num = rand() % 10;
+        code[i] = random_num + '0';
     }
     code[MAX_CODE_LENGTH] = '\0';
     return code;
@@ -55,7 +56,7 @@ void printStops(Stop tab[], int n)
         printStop(tab[i]);
     }
 }
-Stop *deleteStop(Stop *stops, int *numStops)
+Stop *deleteStop(Stop *stops, int *numStops, LineList *firstLine)
 {
     printf("Introduza o codigo da paragem: ");
     char codeToDelete[MAX_CODE_LENGTH + 1];
@@ -67,13 +68,32 @@ Stop *deleteStop(Stop *stops, int *numStops)
     {
         if (strcmp(codeToDelete, stops[i].codigo) == 0)
         {
-            deleted = 1;
-            for (int j = i + 1; j < *numStops; j++)
+            LineList *currentLine = firstLine;
+            while (currentLine != NULL)
             {
-                stops[j - 1] = stops[j];
+                LineStop *currentStop = currentLine->line.nextStop;
+                while (currentStop != NULL)
+                {
+                    if (strcmp(stops[i].codigo, currentStop->stop.codigo) == 0)
+                    {
+                        printf("\nRemova a paragem da Linha %s antes de a apagar\n", currentLine->line.name);
+                        deleted=1;
+                        break;
+                    }
+                    currentStop = currentStop->nextStop;
+                }
+                currentLine = currentLine->nextLine;
             }
-            (*numStops)--;
-            printf("\nParagem Apagada\n");
+            if (!deleted)
+            {
+                deleted = 1;
+                for (int j = i + 1; j < *numStops; j++)
+                {
+                    stops[j - 1] = stops[j];
+                }
+                (*numStops)--;
+                printf("\nParagem Apagada\n");
+            }
             break;
         }
     }

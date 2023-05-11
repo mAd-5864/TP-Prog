@@ -22,7 +22,6 @@ int main()
         printf("Erro na alocação de memória");
         return 0;
     }
-    // Stop *stops = getStops("paragens.txt", &numStops);
 
     do
     {
@@ -76,7 +75,7 @@ int main()
                 system("cls");
                 printStops(stops, numStops);
                 printf("\n--- Apagar Paragem ---\n");
-                stops = deleteStop(stops, &numStops);
+                stops = deleteStop(stops, &numStops, firstLine);
                 break;
             case 4: // Back to main menu
                 system("cls");

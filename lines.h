@@ -35,4 +35,5 @@ Line addLine(Stop *tab, int numStops);
 LineStop *addStopToLine(Line *line, Stop *tab, int numStops, int pos);
 void removeStopFromLine(Line *line);
 Line *updateLine(Line *selectedLine, Stop *tab, int numStops);
+Stop *deleteStop(Stop *stops, int *numStops, LineList *firstLine);
 #endif

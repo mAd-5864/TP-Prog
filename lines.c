@@ -152,7 +152,6 @@ LineStop *addStopToLine(Line *line, Stop *tab, int numStops, int pos)
                         {
                             while (p->nextStop != NULL)
                             {
-                                printf("\nCona %d", pos);
                                 p = p->nextStop;
                             }
                             p->nextStop = newStop;
