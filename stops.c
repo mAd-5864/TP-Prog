@@ -13,17 +13,11 @@ char *generateCode() // Função para  gerar os codigos alfanumeéricos
     srand(time(NULL)); // Seed random number generator
     char *code = malloc((MAX_CODE_LENGTH + 1) * sizeof(char));
 
-    for (int i = 0; i < MAX_CODE_LENGTH; i++)
+    code[0] = (rand() % 26) + 'A';
+    for (int i = 1; i < MAX_CODE_LENGTH; i++)
     {
-        int random_num = rand() % 36;
-        if (random_num < 10)
-        {
+        int random_num = rand() % 10;        
             code[i] = random_num + '0';
-        }
-        else
-        {
-            code[i] = random_num - 10 + 'A';
-        }
     }
     code[MAX_CODE_LENGTH] = '\0';
     return code;
