@@ -24,7 +24,7 @@ void printLine(Line line)
     printf(" ]\n");
 }
 
-void printAllLines(LineList *first)
+Line *printAllLines(LineList *first)
 {
     if (first == NULL)
     {
@@ -33,7 +33,6 @@ void printAllLines(LineList *first)
     else
     {
         int i = 0;
-        printf("\n--- Lista das Linhas ---\n\n");
         LineList *currentLine = first;
         while (currentLine != NULL)
         {
@@ -51,10 +50,11 @@ void printAllLines(LineList *first)
             {
                 system("cls");
                 printLine(currentLine->line);
-                break;
+                return &(currentLine->line);
             }
             currentLine = currentLine->nextLine;
         }
+        return NULL;
     }
 }
 
@@ -109,7 +109,6 @@ Line addLine(Stop *tab, int numStops)
 
 LineStop *addStopToLine(Line *line, Stop *tab, int numStops)
 {
-    int cona = 0;
     LineStop *newStop = malloc(sizeof(LineStop));
     if (newStop == NULL)
     {
@@ -170,4 +169,91 @@ LineStop *addStopToLine(Line *line, Stop *tab, int numStops)
         }
     } while (flag != 1);
     return newStop;
+}
+void removeStopFromLine(Line *line)
+{
+    LineStop *stop = line->nextStop;
+    for (size_t i = 0; i < line->nStops; i++)
+    {
+        printStop(stop->stop);
+        stop = stop->nextStop;
+    }
+    printf("\nIntroduza o codigo da paragem a remover: ");
+    char codeToDelete[MAX_CODE_LENGTH + 1];
+    fflush(stdin);
+    scanf("%4s", codeToDelete);
+
+    LineStop *prevStop = NULL;
+    stop = line->nextStop;
+    while (stop != NULL && strcmp(stop->stop.codigo, codeToDelete) != 0)
+    {
+        prevStop = stop;
+        stop = stop->nextStop;
+    }
+
+    if (stop == NULL)
+    {
+        printf("\nParagem nao pertence a Linha\n");
+        return;
+    }
+
+    // apagar a paragem
+    if (prevStop == NULL)
+    {
+        line->nextStop = stop->nextStop;
+    }
+    else
+    {
+        prevStop->nextStop = stop->nextStop;
+    }
+    system("cls");
+    printf("\nParagem Removida da Linha %s\n", line->name);
+
+    free(stop);
+    line->nStops--;
+}
+
+Line *updateLine(Line *selectedLine, Stop *tab, int numStops)
+{
+    int choice;
+    system("cls");
+    do
+    {
+        printf("\n--- Atualizar Linha ---\n");
+        printf("\n1 - Adicionar Paragem");
+        printf("\n2 - Remover Paragem");
+        printf("\n3 - Voltar ao menu principal\n");
+        scanf("%d", &choice);
+
+        switch (choice)
+        {
+        case 1:
+            /* code */
+            break;
+
+        case 2:
+            system("cls");
+            if (selectedLine->nStops > 2)
+            {
+                removeStopFromLine(selectedLine);
+            }
+            else
+            {
+                printf("A Linha %s apenas tem %d Paragens",selectedLine->name , selectedLine->nStops);
+            }
+
+            break;
+
+        case 3:
+            system("cls");
+            printf("\n--- Back to main menu ---\n");
+            break;
+
+        default:
+            printf("\nOpção inválida. Tente outra vez.\n");
+            choice = 0;
+            break;
+        }
+    } while (!choice);
+    return selectedLine;
 }

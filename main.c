@@ -103,6 +103,7 @@ int main()
             {
             case 1:
                 system("cls");
+                printf("\n--- Lista das Linhas ---\n\n");
                 printAllLines(firstLine);
                 break;
 
@@ -143,13 +144,14 @@ int main()
 
                 break;
 
-            case 3: // Apagar paragem
+            case 3: // Alterar linha
                 system("cls");
-                printf("\n--- Atualizar Linha ---\n");
-                printf("Escolha a linha: ");
+                printf("\n--- Atualizar Linha ---\n\n");
 
-                // TODO: Implement menu functionality for "Linhas"
+                Line *selectedLine = printAllLines(firstLine);
+                updateLine(selectedLine, stops, numStops);
                 break;
+
             case 4: // Back to main menu
                 system("cls");
                 printf("\n--- Back to main menu ---\n");

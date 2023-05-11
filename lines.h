@@ -30,8 +30,9 @@ struct LineList {
 };
 
 void printLine(Line line);
-void printAllLines(LineList *first);
+Line *printAllLines(LineList *first);
 Line addLine(Stop *tab, int numStops);
 LineStop *addStopToLine(Line *line, Stop *tab, int numStops);
-
+void removeStopFromLine(Line *line);
+Line *updateLine(Line *selectedLine, Stop *tab, int numStops);
 #endif
