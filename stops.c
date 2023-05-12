@@ -9,12 +9,12 @@
 #include "stops.h"
 #include "lines.h"
 
-char *generateCode() // Função para  gerar os codigos alfanumeéricos
+char *generateCode(char name[]) // Função para  gerar os codigos alfanumeéricos
 {
     srand(time(NULL)); // Seed random number generator
     char *code = malloc((MAX_CODE_LENGTH + 1) * sizeof(char));
 
-    code[0] = (rand() % 26) + 'A';
+    code[0] =toupper(name[0]);
     for (int i = 1; i < MAX_CODE_LENGTH; i++)
     {
         int random_num = rand() % 10;
@@ -38,7 +38,7 @@ Stop addStop()
             p.name[--len] = '\0';
         }
     }
-    char *code = generateCode();
+    char *code = generateCode(p.name);
     strcpy(p.codigo, code);
     p.valid = 1;
     return p;
@@ -135,7 +135,7 @@ Stop *getStops(char *filename, int *numStops)
             break;
         }
         strcpy(stops[*numStops].name, line);
-        strcpy(stops[*numStops].codigo, generateCode());
+        strcpy(stops[*numStops].codigo, generateCode(stops[*numStops].name));
         (*numStops)++;
     }
     fclose(file);

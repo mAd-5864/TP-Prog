@@ -17,7 +17,7 @@ struct Stop
     char codigo[MAX_CODE_LENGTH + 1];
 };
 
-char *generateCode();
+char *generateCode(char name[]);
 Stop addStop();
 void printStop(Stop stop);
 void printStops(Stop tab[], int n);
