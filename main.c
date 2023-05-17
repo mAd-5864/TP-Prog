@@ -10,19 +10,63 @@
 #include "stops.h"
 #include "lines.h"
 
+void guardarDados(LineList *firstLine, Stop *stops, int numStops, const char *filename)
+{
+    FILE *file = fopen(filename, "wb");
+    if (file == NULL)
+    {
+        printf("Erro ao abrir o ficheiro\n");
+        return;
+    }
+
+    fwrite(&numStops, sizeof(int), 1, file); // Guardar o número de paragens
+
+    fwrite(stops, sizeof(Stop), numStops, file); // Guardar as paragens
+
+    LineList *currentLine = firstLine;
+    while (currentLine != NULL) // Guardar os dados de cada linha
+    {
+        Line *line = &(currentLine->line);
+
+        int lineNameLength = strlen(line->name);
+        fwrite(&lineNameLength, sizeof(int), 1, file); // Escrever o tamanho do nome da linha
+
+        fwrite(line->name, sizeof(char), lineNameLength, file); // Escrever o nome da linha
+
+        fwrite(&(line->nStops), sizeof(int), 1, file); // Escrever o número de paragens da linha
+
+        LineStop *currentStop = line->nextStop;
+        while (currentStop != NULL)
+        {
+            int stopIndex = -1;
+            for (int i = 0; i < numStops; i++)
+            {
+                if (strcmp(currentStop->stop.codigo, stops[i].codigo) == 0)
+                {
+                    stopIndex = i; // Guardar o indice de cada paragem
+                    break;
+                }
+            }
+
+            // Escrever o índice da paragem
+            fwrite(&stopIndex, sizeof(int), 1, file);
+
+            currentStop = currentStop->nextStop;
+        }
+
+        currentLine = currentLine->nextLine;
+    }
+
+    fclose(file);
+    printf("Dados gravados com sucesso no ficheiro %s\n", filename);
+}
 int main()
 {
     system("cls");
     int choice, numStops = 0, numLines = 0;
-    Stop *stops = malloc(sizeof(Stop) * numStops);
     LineList *firstLine = NULL;
     LineList *currentLine = NULL;
-    if (stops == NULL)
-    {
-        printf("Erro na alocação de memória");
-        return 0;
-    }
-
+    Stop *stops = read_paragens_from_file("metromondego.dat", &numStops);
     do
     {
         printf("\n\n--- MENU ---\n");
@@ -150,7 +194,7 @@ int main()
                 Line *selectedLine = printAllLines(firstLine);
                 if (selectedLine != NULL)
                 {
-                updateLine(selectedLine, stops, numStops);
+                    updateLine(selectedLine, stops, numStops);
                 }
                 else
                 {
@@ -176,7 +220,8 @@ int main()
             // TODO: Implement menu functionality for "Percursos"
             break;
         case 4: // "Exit"
-            printf("\nFim Programa!\n");
+            system("cls");
+            guardarDados(firstLine, stops, numStops, "metromondego.dat");
             break;
         default:
             printf("\nOpção inválida. Tente outra vez.\n");
@@ -185,6 +230,5 @@ int main()
 
     free(firstLine);
     free(stops);
-    system("cls");
     return 0;
 }

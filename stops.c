@@ -14,7 +14,7 @@ char *generateCode(char name[]) // Função para  gerar os codigos alfanumeéric
     srand(time(NULL)); // Seed random number generator
     char *code = malloc((MAX_CODE_LENGTH + 1) * sizeof(char));
 
-    code[0] =toupper(name[0]);
+    code[0] = toupper(name[0]);
     for (int i = 1; i < MAX_CODE_LENGTH; i++)
     {
         int random_num = rand() % 10;
@@ -77,7 +77,7 @@ Stop *deleteStop(Stop *stops, int *numStops, LineList *firstLine)
                     if (strcmp(stops[i].codigo, currentStop->stop.codigo) == 0)
                     {
                         printf("\nRemova a paragem da Linha %s antes de a apagar\n", currentLine->line.name);
-                        deleted=1;
+                        deleted = 1;
                         break;
                     }
                     currentStop = currentStop->nextStop;
@@ -141,3 +141,16 @@ Stop *getStops(char *filename, int *numStops)
     fclose(file);
     return stops;
 }
+/* Stop* readStop(FILE* file) {
+    Stop* stop = malloc(sizeof(Stop));
+    if (stop == NULL) {
+        printf("Failed to allocate memory for Stop.\n");
+        return NULL;
+    }
+    if (fscanf(file, " %[^#]#%s", stop->name, stop->codigo) != 2) {
+        free(stop);
+        return NULL;
+    }
+    stop->valid = 1;
+    return stop;
+} */
