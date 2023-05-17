@@ -64,9 +64,14 @@ int main()
 {
     system("cls");
     int choice, numStops = 0, numLines = 0;
+    Stop *stops = malloc(sizeof(Stop) * numStops);
     LineList *firstLine = NULL;
     LineList *currentLine = NULL;
-    Stop *stops = read_paragens_from_file("metromondego.dat", &numStops);
+    if (stops == NULL)
+    {
+        printf("Erro na alocação de memória");
+        return 0;
+    }
     do
     {
         printf("\n\n--- MENU ---\n");
