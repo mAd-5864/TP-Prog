@@ -72,6 +72,16 @@ int main()
         printf("Erro na alocação de memória");
         return 0;
     }
+    FILE *file = fopen("metromondego.dat", "rb");
+    if (file == NULL)
+    {
+        printf("Nao foi possivel abrir o arquivo metromondego.dat\n");
+    } else {
+    fread(&numStops, sizeof(int), 1, file);
+    stops = realloc(stops, sizeof(Stop) * numStops);
+    fread(stops, sizeof(Stop), numStops, file);
+    fclose(file);
+    }
     do
     {
         printf("\n\n--- MENU ---\n");

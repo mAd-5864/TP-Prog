@@ -104,53 +104,17 @@ Stop *deleteStop(Stop *stops, int *numStops, LineList *firstLine)
     return stops;
 }
 
-Stop *getStops(char *filename, int *numStops)
+void getStops(char *filename, Stop *stops,int *numStops)
 {
-    FILE *file = fopen(filename, "r");
+        FILE *file = fopen("metromondego.dat", "rb");
     if (file == NULL)
     {
-        printf("Erro ao abrir ficheiro\n");
-        return NULL;
-    }
-
-    Stop *stops = malloc(sizeof(Stop) * MAX_STOPS);
-    if (stops == NULL)
-    {
-        printf("Erro na alocação de memória");
-        fclose(file);
-        return 0;
-    }
-
-    *numStops = 0;
-    char line[MAX_NAME_LENGTH + 1];
-    while (fgets(line, sizeof(line), file) != NULL)
-    {
-        if (line[strlen(line) - 1] == '\n')
-        {
-            line[strlen(line) - 1] = '\0';
-        }
-        if (*numStops >= MAX_STOPS)
-        {
-            printf("Numero maximo de paragens atingido\n");
-            break;
-        }
-        strcpy(stops[*numStops].name, line);
-        strcpy(stops[*numStops].codigo, generateCode(stops[*numStops].name));
-        (*numStops)++;
-    }
+        printf("Nao foi possivel abrir o arquivo metromondego.dat\n");
+    } else {
+    fread(&numStops, sizeof(int), 1, file);
+    stops = realloc(stops, sizeof(Stop) * (*numStops));
+    fread(stops, sizeof(Stop), (*numStops), file);
     fclose(file);
-    return stops;
+    }
 }
-/* Stop* readStop(FILE* file) {
-    Stop* stop = malloc(sizeof(Stop));
-    if (stop == NULL) {
-        printf("Failed to allocate memory for Stop.\n");
-        return NULL;
-    }
-    if (fscanf(file, " %[^#]#%s", stop->name, stop->codigo) != 2) {
-        free(stop);
-        return NULL;
-    }
-    stop->valid = 1;
-    return stop;
-} */
+
