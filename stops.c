@@ -104,17 +104,3 @@ Stop *deleteStop(Stop *stops, int *numStops, LineList *firstLine)
     return stops;
 }
 
-void getStops(char *filename, Stop *stops,int *numStops)
-{
-        FILE *file = fopen("metromondego.dat", "rb");
-    if (file == NULL)
-    {
-        printf("Nao foi possivel abrir o arquivo metromondego.dat\n");
-    } else {
-    fread(&numStops, sizeof(int), 1, file);
-    stops = realloc(stops, sizeof(Stop) * (*numStops));
-    fread(stops, sizeof(Stop), (*numStops), file);
-    fclose(file);
-    }
-}
-

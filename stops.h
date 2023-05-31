@@ -21,5 +21,4 @@ char *generateCode(char name[]);
 Stop addStop();
 void printStop(Stop stop);
 void printStops(Stop tab[], int n);
-void getStops(char *filename, Stop *stops, int *numStops);
 #endif
