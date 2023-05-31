@@ -24,6 +24,15 @@ void guardarDados(LineList *firstLine, Stop *stops, int numStops, const char *fi
     fwrite(stops, sizeof(Stop), numStops, file); // Guardar as paragens
 
     LineList *currentLine = firstLine;
+    LineList *p = firstLine;
+    int numLines = 0;
+    while (p!=NULL)
+    {
+        numLines++;
+        p = p->nextLine;
+    }
+    fwrite(&numLines, sizeof(int), 1, file); // Guardar o número de Linhas
+
     while (currentLine != NULL) // Guardar os dados de cada linha
     {
         Line *line = &(currentLine->line);
@@ -76,11 +85,71 @@ int main()
     if (file == NULL)
     {
         printf("Nao foi possivel abrir o arquivo metromondego.dat\n");
-    } else {
-    fread(&numStops, sizeof(int), 1, file);
-    stops = realloc(stops, sizeof(Stop) * numStops);
-    fread(stops, sizeof(Stop), numStops, file);
-    fclose(file);
+    }
+    else
+    {
+        fread(&numStops, sizeof(int), 1, file);
+        stops = realloc(stops, sizeof(Stop) * numStops);
+        fread(stops, sizeof(Stop), numStops, file);
+        fread(&numLines, sizeof(int), 1, file);
+
+        // Ler as informações de cada linha
+        for (int i = 0; i < numLines; i++)
+        {
+            Line line;
+            int lineNameLength = 0;
+            fread(&lineNameLength, sizeof(int), 1, file);
+            char lineName[lineNameLength + 1];
+            fread(lineName, sizeof(char), lineNameLength, file);
+            lineName[lineNameLength] = '\0'; // Terminar a string
+            strcpy(line.name, lineName);
+
+
+            fread(&line.nStops, sizeof(int), 1, file);
+            line.nextStop = NULL;
+
+            for (int j = 0; j < line.nStops; j++)
+            {
+                int stopIndex = 0;
+                fread(&stopIndex, sizeof(int), 1, file);
+
+                // Associar a paragem correspondente à linha
+                LineStop *stop = malloc(sizeof(LineStop));
+                stop->stop = stops[stopIndex];
+                stop->nextStop = NULL;
+
+                if (line.nextStop == NULL)
+                {
+                    line.nextStop = stop;
+                }
+                else
+                {
+                    LineStop *currentStop = line.nextStop;
+                    while (currentStop->nextStop != NULL)
+                    {
+                        currentStop = currentStop->nextStop;
+                    }
+                    currentStop->nextStop = stop;
+                }
+            }
+
+            // Adicionar a linha à lista de linhas
+            LineList *newLine = malloc(sizeof(LineList));
+            newLine->line = line;
+            newLine->nextLine = NULL;
+
+            if (firstLine == NULL)
+            {
+                firstLine = newLine;
+                currentLine = newLine;
+            }
+            else
+            {
+                currentLine->nextLine = newLine;
+                currentLine = newLine;
+            }
+        }
+        fclose(file);
     }
     do
     {
