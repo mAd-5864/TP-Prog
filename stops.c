@@ -76,6 +76,7 @@ Stop *deleteStop(Stop *stops, int *numStops, LineList *firstLine)
                 {
                     if (strcmp(stops[i].codigo, currentStop->stop.codigo) == 0)
                     {
+                        system("cls");
                         printf("\nRemova a paragem da Linha %s antes de a apagar\n", currentLine->line.name);
                         deleted = 1;
                         break;

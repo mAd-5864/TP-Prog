@@ -184,13 +184,16 @@ int main()
                 stops = realloc(stops, sizeof(Stop) * (numStops + 1));
                 int flag = 0;
                 do
-                {
+                {   
+                    flag = 0;
                     stops[numStops] = addStop();
                     for (int i = 0; i < numStops; i++) // verificar codigos repetidos
                     {
-                        if (strcmp(stops[i].codigo, stops[numStops].codigo) == 0)
+                        if (strcmp(stops[i].codigo, stops[numStops].codigo) == 0 || strcmp(stops[i].name, stops[numStops].name) == 0)
                         {
                             flag = 1;
+                            system("cls");
+                            printf("\nParagem ja existente!\n\n");
                             break;
                         }
                     }
@@ -245,7 +248,7 @@ int main()
                         printf("Erro na alocação de memória");
                         return 0;
                     }
-                    newLine->line = addLine(stops, numStops);
+                    newLine->line = addLine(stops, numStops, firstLine);
                     newLine->nextLine = NULL;
 
                     if (firstLine == NULL)

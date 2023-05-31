@@ -58,21 +58,40 @@ Line *printAllLines(LineList *first)
     }
 }
 
-Line addLine(Stop *tab, int numStops)
+Line addLine(Stop *tab, int numStops, LineList *firstLine)
 {
     Line *l = malloc(sizeof(Line));
     l->nextStop = NULL;
 
-    printf("\nNome da Linha: ");
-    fflush(stdin);
-    if (fgets(l->name, sizeof(l->name), stdin) != NULL)
+    int flag = 0;
+    do
     {
-        size_t len = strlen(l->name);
-        if (len > 0 && l->name[len - 1] == '\n')
+        flag = 0;
+        printf("\nNome da Linha: ");
+        fflush(stdin);
+        if (fgets(l->name, sizeof(l->name), stdin) != NULL)
         {
-            l->name[--len] = '\0';
+            size_t len = strlen(l->name);
+            if (len > 0 && l->name[len - 1] == '\n')
+            {
+                l->name[--len] = '\0';
+            }
         }
-    }
+
+        LineList *currentLine = firstLine;
+        while (currentLine != NULL)
+        {
+            if (strcmp(currentLine->line.name, l->name)==0)
+            {
+                flag = 1;
+                system("cls");
+                printf("\nLinha ja existente!\n");
+                break;
+            }
+            currentLine = currentLine->nextLine;
+        }
+
+    } while (flag);
     do
     {
         printf("\nInsira o numero de Paragens da Linha: ");
@@ -175,7 +194,7 @@ LineStop *addStopToLine(Line *line, Stop *tab, int numStops, int pos)
                     else if (pos > 1)
                     {
                         LineStop *prevStop = line->nextStop;
-                        for (int j = 1; j < pos-1; j++)
+                        for (int j = 1; j < pos - 1; j++)
                         {
                             prevStop = prevStop->nextStop;
                         }

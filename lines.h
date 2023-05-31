@@ -31,7 +31,7 @@ struct LineList {
 
 void printLine(Line line);
 Line *printAllLines(LineList *first);
-Line addLine(Stop *tab, int numStops);
+Line addLine(Stop *tab, int numStops, LineList *firstLine);
 LineStop *addStopToLine(Line *line, Stop *tab, int numStops, int pos);
 void removeStopFromLine(Line *line);
 Line *updateLine(Line *selectedLine, Stop *tab, int numStops);
