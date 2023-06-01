@@ -26,7 +26,7 @@ void calcularPercurso(LineList *firstLine, char partida[], char destino[])
 {
     system("cls");
     LineList *currentLine = firstLine;
-    int direct = malloc(sizeof(int));
+    int direct = 0;
     int changeLine = 0;
 
     printf("\nPercursos diretos:\n");
@@ -77,9 +77,10 @@ void calcularPercurso(LineList *firstLine, char partida[], char destino[])
                 printf("%s -> ", currentStop->stop.name);
             }
             printf("%s ]\n\n", destino);
+            break;
         }
 
-        printf("Linha atual: %s \n\n", currentLine->line.name);
+        printf("Linha atual:%s \n\n", currentLine->line.name);
         currentLine = currentLine->nextLine;
     }
 
