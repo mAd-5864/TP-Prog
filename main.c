@@ -1,7 +1,7 @@
 // Pedro Teixeira Amorim
 // 2022157609
 
-// gcc main.c stops.c lines.c -o metromondego
+// gcc main.c stops.c lines.c percursos.c -o metromondego
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -9,6 +9,7 @@
 #include <ctype.h>
 #include "stops.h"
 #include "lines.h"
+#include "percursos.h"
 
 void guardarDados(LineList *firstLine, Stop *stops, int numStops, const char *filename)
 {
@@ -26,7 +27,7 @@ void guardarDados(LineList *firstLine, Stop *stops, int numStops, const char *fi
     LineList *currentLine = firstLine;
     LineList *p = firstLine;
     int numLines = 0;
-    while (p!=NULL)
+    while (p != NULL)
     {
         numLines++;
         p = p->nextLine;
@@ -103,7 +104,6 @@ int main()
             fread(lineName, sizeof(char), lineNameLength, file);
             lineName[lineNameLength] = '\0'; // Terminar a string
             strcpy(line.name, lineName);
-
 
             fread(&line.nStops, sizeof(int), 1, file);
             line.nextStop = NULL;
@@ -184,7 +184,7 @@ int main()
                 stops = realloc(stops, sizeof(Stop) * (numStops + 1));
                 int flag = 0;
                 do
-                {   
+                {
                     flag = 0;
                     stops[numStops] = addStop();
                     for (int i = 0; i < numStops; i++) // verificar codigos repetidos
@@ -303,7 +303,42 @@ int main()
             break;
         case 3: // "Percursos"
             system("cls");
-            printf("\nPercursos Menu\n");
+            printf("\n--Percursos--\n");
+            printf("1 - Calcular Percurso\n");
+            printf("2 - Adicionar nova paragem\n");
+            printf("3 - Voltar ao menu principal\n");
+            scanf("%d", &choice);
+
+            switch (choice)
+            {
+            case 1:
+                system("cls");
+                char pontoPartida[MAX_NAME_LENGTH];
+                char destino[MAX_NAME_LENGTH];
+
+                getName(pontoPartida, "Insira o ponto de Partida:");
+                getName(destino, "Insira o seu Destino:");
+                
+                calcularPercurso(firstLine, pontoPartida, destino);
+                break;
+
+            case 2: // Apagar paragem
+                system("cls");
+                printStops(stops, numStops);
+                printf("\n--- Apagar Paragem ---\n");
+                stops = deleteStop(stops, &numStops, firstLine);
+                break;
+            case 3: // Back to main menu
+                system("cls");
+                printf("\n--- Back to main menu ---\n");
+                choice = 0;
+                break;
+
+            default:
+                printf("\nOpção inválida. Tente outra vez.\n");
+                break;
+            }
+
             // TODO: Implement menu functionality for "Percursos"
             break;
         case 4: // "Exit"
