@@ -29,58 +29,91 @@ void calcularPercurso(LineList *firstLine, char partida[], char destino[])
     int direct = 0;
     int changeLine = 0;
 
-    printf("\nPercursos diretos:\n");
+    printf("\nPercursos diretos possiveis:\n");
     while (currentLine != NULL)
     {
         Line *line = &(currentLine->line);
         LineStop *currentStop = line->nextStop;
         int partidaFound = 0;
         int destinoFound = 0;
+        int i = 0, invert = 0;
+        direct = 1;
 
-        // Check if starting and ending stops exist on the line
+        // Verificar se viagem e possivel na linha
         while (currentStop != NULL)
         {
+            i++;
             if (strcmp(currentStop->stop.name, partida) == 0)
             {
-                partidaFound = 1;
+                partidaFound = i;
             }
             if (strcmp(currentStop->stop.name, destino) == 0)
             {
-                destinoFound = 1;
+                destinoFound = i;
             }
 
             if (partidaFound && destinoFound)
             {
-                direct = 1;
+                if (partidaFound > destinoFound)
+                {
+                    invert = 1;
+                }
+
+                direct++;
                 break;
             }
 
             currentStop = currentStop->nextStop;
         }
 
-        if (direct)
+        if (direct > 1)
         {
-            printf("\nLinha %s\n", line->name);
-            printf("[ %s -> ", partida);
-            currentStop = line->nextStop;
-            while (strcmp(currentStop->stop.name, partida) != 0)
+            if (invert)
             {
-                currentStop = currentStop->nextStop;
-            }
-            while (currentStop != NULL)
-            {
-                currentStop = currentStop->nextStop;
-                if (strcmp(currentStop->stop.name, destino) == 0)
+                printf("\nLinha %s\n", line->name);
+                printf("[ %s -> ", partida);
+                currentStop = line->nextStop;
+
+                while (strcmp(currentStop->stop.name, partida) != 0)
                 {
-                    break;
+                    currentStop = currentStop->nextStop;
                 }
-                printf("%s -> ", currentStop->stop.name);
+
+                while (currentStop != NULL)
+                {
+                    currentStop = currentStop->prevStop;
+                    if (strcmp(currentStop->stop.name, destino) == 0)
+                    {
+                        break;
+                    }
+                    printf("%s -> ", currentStop->stop.name);
+                }
+
+                printf("%s ]\n\n", destino); // Print 'partida' as the destination
             }
-            printf("%s ]\n\n", destino);
-            break;
+            else
+            {
+                printf("\nLinha %s\n", line->name);
+                printf("[ %s -> ", partida);
+                currentStop = line->nextStop;
+                while (strcmp(currentStop->stop.name, partida) != 0)
+                {
+                    currentStop = currentStop->nextStop;
+                }
+                while (currentStop != NULL)
+                {
+                    currentStop = currentStop->nextStop;
+                    if (strcmp(currentStop->stop.name, destino) == 0)
+                    {
+                        break;
+                    }
+                    printf("%s -> ", currentStop->stop.name);
+                }
+                printf("%s ]\n\n", destino);
+            }
+            direct--;
         }
 
-        printf("Linha atual:%s \n\n", currentLine->line.name);
         currentLine = currentLine->nextLine;
     }
 

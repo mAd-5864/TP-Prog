@@ -15,7 +15,6 @@ void printLine(Line line)
     LineStop *stop = line.nextStop;
 
     printf("[ %s", stop->stop.name);
-    printf(" [ %s ] ", stop->nextStop->stop.name);
     stop = stop->nextStop;
     for (int i = 1; i < line.nStops; i++)
     {
@@ -69,7 +68,7 @@ Line *printAllLines(LineList *first)
             if (choice == i)
             {
                 system("cls");
-                printLineReverse(currentLine->line);
+                printLine(currentLine->line);
                 return &(currentLine->line);
             }
             currentLine = currentLine->nextLine;
