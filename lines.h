@@ -15,6 +15,7 @@ typedef struct LineList LineList; // Lista das Linhas
 struct LineStop {
     Stop stop;
     LineStop *nextStop;
+    LineStop *prevStop;
 };
 
 struct Line
@@ -35,5 +36,7 @@ Line addLine(Stop *tab, int numStops, LineList *firstLine);
 LineStop *addStopToLine(Line *line, Stop *tab, int numStops, int pos);
 void removeStopFromLine(Line *line);
 Line *updateLine(Line *selectedLine, Stop *tab, int numStops);
+void *deleteLine(LineList **first, Line *selectedLine);
 Stop *deleteStop(Stop *stops, int *numStops, LineList *firstLine);
+void freeLine(Line *line);
 #endif

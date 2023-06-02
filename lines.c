@@ -15,11 +15,31 @@ void printLine(Line line)
     LineStop *stop = line.nextStop;
 
     printf("[ %s", stop->stop.name);
+    printf(" [ %s ] ", stop->nextStop->stop.name);
     stop = stop->nextStop;
     for (int i = 1; i < line.nStops; i++)
     {
         printf("  <>  %s", stop->stop.name);
         stop = stop->nextStop;
+    }
+    printf(" ]\n");
+}
+
+void printLineReverse(Line line)
+{
+    printf("\n Linha %s - %d Paragens\n", line.name, line.nStops);
+    LineStop *stop = line.nextStop;
+    while (stop->nextStop != NULL)
+    {
+        stop = stop->nextStop;
+    }
+
+    printf("[ %s", stop->stop.name);
+    stop = stop->prevStop;
+    for (int i = 1; i < line.nStops; i++)
+    {
+        printf("  <>  %s", stop->stop.name);
+        stop = stop->prevStop;
     }
     printf(" ]\n");
 }
@@ -49,7 +69,7 @@ Line *printAllLines(LineList *first)
             if (choice == i)
             {
                 system("cls");
-                printLine(currentLine->line);
+                printLineReverse(currentLine->line);
                 return &(currentLine->line);
             }
             currentLine = currentLine->nextLine;
@@ -81,7 +101,7 @@ Line addLine(Stop *tab, int numStops, LineList *firstLine)
         LineList *currentLine = firstLine;
         while (currentLine != NULL)
         {
-            if (strcmp(currentLine->line.name, l->name)==0)
+            if (strcmp(currentLine->line.name, l->name) == 0)
             {
                 flag = 1;
                 system("cls");
@@ -132,9 +152,12 @@ LineStop *addStopToLine(Line *line, Stop *tab, int numStops, int pos)
     if (newStop == NULL)
     {
         printf("Erro na alocação de memória");
-        return 0;
-    };
+        return NULL;
+    }
+
     newStop->nextStop = NULL;
+    newStop->prevStop = NULL;
+
     int flag;
     do
     {
@@ -164,42 +187,49 @@ LineStop *addStopToLine(Line *line, Stop *tab, int numStops, int pos)
                 }
                 if (flag == 1)
                 {
+                    p = line->nextStop;
                     newStop->stop = tab[i];
-                    if (p != NULL)
+                    if (pos == 0)
                     {
-                        if (pos == 0)
+                        if (line->nextStop == NULL)
+                        {
+                            line->nextStop = newStop;
+                        }
+                        else
                         {
                             while (p->nextStop != NULL)
                             {
                                 p = p->nextStop;
                             }
                             p->nextStop = newStop;
-                            newStop->nextStop = NULL;
+                            newStop->prevStop = p;
                         }
                     }
+
                     if (pos == 1)
                     {
                         newStop->nextStop = line->nextStop;
-
-                        LineStop *lastStop = newStop;
-                        while (lastStop->nextStop != NULL)
+                        if (line->nextStop != NULL)
                         {
-                            lastStop = lastStop->nextStop;
+                            line->nextStop->prevStop = newStop;
                         }
-                        lastStop->nextStop = p;
-
                         line->nextStop = newStop;
                         line->nStops++;
                     }
                     else if (pos > 1)
                     {
-                        LineStop *prevStop = line->nextStop;
-                        for (int j = 1; j < pos - 1; j++)
+                        LineStop *currentStop = line->nextStop;
+                        for (int j = 1; j < pos; j++)
                         {
-                            prevStop = prevStop->nextStop;
+                            currentStop = currentStop->nextStop;
                         }
-                        newStop->nextStop = prevStop->nextStop;
-                        prevStop->nextStop = newStop;
+                        newStop->nextStop = currentStop->nextStop;
+                        if (currentStop->nextStop != NULL)
+                        {
+                            currentStop->nextStop->prevStop = newStop;
+                        }
+                        currentStop->nextStop = newStop;
+                        newStop->prevStop = currentStop;
 
                         line->nStops++;
                     }
@@ -216,8 +246,10 @@ LineStop *addStopToLine(Line *line, Stop *tab, int numStops, int pos)
             printf("\nParagem nao encontrada\n");
         }
     } while (flag != 1);
+
     return newStop;
 }
+
 void removeStopFromLine(Line *line)
 {
     LineStop *stop = line->nextStop;
@@ -231,11 +263,9 @@ void removeStopFromLine(Line *line)
     fflush(stdin);
     scanf("%4s", codeToDelete);
 
-    LineStop *prevStop = NULL;
     stop = line->nextStop;
     while (stop != NULL && strcmp(stop->stop.codigo, codeToDelete) != 0)
     {
-        prevStop = stop;
         stop = stop->nextStop;
     }
 
@@ -246,13 +276,21 @@ void removeStopFromLine(Line *line)
     }
 
     // apagar a paragem
-    if (prevStop == NULL)
+    if (stop->prevStop == NULL)
     {
         line->nextStop = stop->nextStop;
+        if (stop->nextStop != NULL)
+        {
+            stop->nextStop->prevStop = NULL;
+        }
     }
     else
     {
-        prevStop->nextStop = stop->nextStop;
+        stop->prevStop->nextStop = stop->nextStop;
+        if (stop->nextStop != NULL)
+        {
+            stop->nextStop->prevStop = stop->prevStop;
+        }
     }
     system("cls");
     printf("\nParagem Removida da Linha %s\n", line->name);
@@ -322,4 +360,44 @@ Line *updateLine(Line *selectedLine, Stop *tab, int numStops)
         }
     } while (!choice);
     return selectedLine;
+}
+
+void *deleteLine(LineList **first, Line *selectedLine)
+{
+
+    LineList *currentLine = *first;
+    LineList *prevLine = NULL;
+
+    // FEncontrar a linha escolhida na lista de linhas
+    while (currentLine != NULL && &(currentLine->line) != selectedLine)
+    {
+        prevLine = currentLine;
+        currentLine = currentLine->nextLine;
+    }
+
+    // Remover linha escolhida
+    if (prevLine != NULL)
+    {
+        prevLine->nextLine = currentLine->nextLine;
+    }
+    else
+    {
+        *first = currentLine->nextLine;
+    }
+    printf("Linha %s apagada", selectedLine->name);
+    freeLine(selectedLine);
+}
+
+void freeLine(Line *line)
+{
+    LineStop *currentStop = line->nextStop;
+    while (currentStop != NULL)
+    {
+        LineStop *nextStop = currentStop->nextStop;
+        free(currentStop);
+        currentStop = nextStop;
+    }
+
+    // Libertar a memoria da linha escolhida
+    free(line);
 }

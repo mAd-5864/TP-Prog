@@ -117,6 +117,7 @@ int main()
                 LineStop *stop = malloc(sizeof(LineStop));
                 stop->stop = stops[stopIndex];
                 stop->nextStop = NULL;
+                stop->prevStop = NULL;
 
                 if (line.nextStop == NULL)
                 {
@@ -130,6 +131,7 @@ int main()
                         currentStop = currentStop->nextStop;
                     }
                     currentStop->nextStop = stop;
+                    stop->prevStop = currentStop;
                 }
             }
 
@@ -226,11 +228,13 @@ int main()
             printf("1 - Ver Linhas\n");
             printf("2 - Adicionar nova Linha\n");
             printf("3 - Atualizar Linha existente\n");
-            printf("4 - Voltar ao menu principal\n");
+            printf("4 - Apagar Linha existente\n");
+            printf("5 - Voltar ao menu principal\n");
             scanf("%d", &choice);
 
             switch (choice)
             {
+                Line *selectedLine = NULL;
             case 1:
                 system("cls");
                 printf("\n--- Lista das Linhas ---\n\n");
@@ -278,7 +282,7 @@ int main()
                 system("cls");
                 printf("\n--- Atualizar Linha ---\n\n");
 
-                Line *selectedLine = printAllLines(firstLine);
+                selectedLine = printAllLines(firstLine);
                 if (selectedLine != NULL)
                 {
                     updateLine(selectedLine, stops, numStops);
@@ -290,7 +294,19 @@ int main()
 
                 break;
 
-            case 4: // Back to main menu
+            case 4: // Delete Line
+                system("cls");
+
+                selectedLine = printAllLines(firstLine);
+                if (selectedLine != NULL)
+                {
+                    system("cls");
+                    deleteLine(&firstLine, selectedLine);
+                }
+                choice = 0;
+                break;
+
+            case 5: // Back to main menu
                 system("cls");
                 printf("\n--- Back to main menu ---\n");
                 choice = 0;
@@ -318,7 +334,7 @@ int main()
 
                 getName(pontoPartida, "Insira o ponto de Partida:");
                 getName(destino, "Insira o seu Destino:");
-                
+
                 calcularPercurso(firstLine, pontoPartida, destino);
                 break;
 
