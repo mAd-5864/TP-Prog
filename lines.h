@@ -8,11 +8,12 @@
 #define MAX_STOPS_LINE 40
 #define MAX_NAME_LENGTH 20
 
-typedef struct Line Line; // Estrutura para as linhas
+typedef struct Line Line;         // Estrutura para as linhas
 typedef struct LineStop LineStop; // Estrutura para as paragens da linha
 typedef struct LineList LineList; // Lista das Linhas
 
-struct LineStop {
+struct LineStop
+{
     Stop stop;
     LineStop *nextStop;
     LineStop *prevStop;
@@ -25,7 +26,8 @@ struct Line
     LineStop *nextStop;
 };
 
-struct LineList {
+struct LineList
+{
     Line line;
     LineList *nextLine;
 };
