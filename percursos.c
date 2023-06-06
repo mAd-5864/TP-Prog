@@ -22,103 +22,156 @@ void getName(char *name, const char *message)
     }
 }
 
-void calcularPercurso(LineList *firstLine, char partida[], char destino[])
+void encontrarPercursoDireto(LineStop *currentStop, char partida[], char destino[], int *direct, int *invert)
+{
+    int partidaFound = 0, destinoFound = 0, i = 0;
+    // Verificar se viagem e possivel na linha
+    while (currentStop != NULL)
+    {
+        i++;
+        if (strcmp(currentStop->stop.name, partida) == 0)
+        {
+            partidaFound = i;
+        }
+        if (strcmp(currentStop->stop.name, destino) == 0)
+        {
+            destinoFound = i;
+        }
+
+        if (partidaFound && destinoFound)
+        {
+            if (partidaFound > destinoFound)
+            {
+                *invert = 1;
+            }
+
+            (*direct)++;
+            break;
+        }
+
+        currentStop = currentStop->nextStop;
+    }
+}
+
+void mostrarPercursoDireto(LineList *firstLine, char partida[], char destino[])
 {
     system("cls");
     LineList *currentLine = firstLine;
-    int direct = 0;
-    int changeLine = 0;
+    int direct = 0, notPossible = 1;
 
     printf("\nPercursos diretos possiveis:\n");
     while (currentLine != NULL)
     {
         Line *line = &(currentLine->line);
         LineStop *currentStop = line->nextStop;
-        int partidaFound = 0;
-        int destinoFound = 0;
-        int i = 0, invert = 0;
+        int invert = 0;
         direct = 1;
+        encontrarPercursoDireto(currentStop, partida, destino, &direct, &invert);
 
-        // Verificar se viagem e possivel na linha
+        if (direct > 1)
+        {
+            printLine(*line, partida, destino, 0, invert);
+            direct--;
+            notPossible = 0;
+        }
+
+        currentLine = currentLine->nextLine;
+    }
+
+    if (notPossible)
+    {
+        system("cls");
+        printf("\nNao existe percurso direto\n\n");
+    }
+}
+
+void mostrarPercursoComEscala(LineList *firstLine, char partida[], char destino[])
+{
+    system("cls");
+    printf("\nPercursos com troca de linha:\n");
+    int changeLine = 0;
+    LineList *currentLine = firstLine;
+    while (currentLine != NULL)
+    {
+        Line *linhaPartida = &(currentLine->line);
+        LineStop *currentStop = linhaPartida->nextStop;
+        int partidaFound = 0;
+        int i = 0;
+
+        // Verificar se partida existe na linha atual
         while (currentStop != NULL)
         {
             i++;
             if (strcmp(currentStop->stop.name, partida) == 0)
             {
                 partidaFound = i;
-            }
-            if (strcmp(currentStop->stop.name, destino) == 0)
-            {
-                destinoFound = i;
-            }
-
-            if (partidaFound && destinoFound)
-            {
-                if (partidaFound > destinoFound)
-                {
-                    invert = 1;
-                }
-
-                direct++;
                 break;
             }
 
             currentStop = currentStop->nextStop;
         }
 
-        if (direct > 1)
+        // Se a partida for encontrada na linha atual
+        if (partidaFound)
         {
-            if (invert)
+            int connectionCount = linhaPartida->nStops - 1, skip = 0;
+            char possibleConnection[connectionCount][MAX_NAME_LENGTH];
+            currentStop = linhaPartida->nextStop;
+            for (size_t j = 0; j < connectionCount + 1; j++)
             {
-                printf("\nLinha %s\n", line->name);
-                printf("[ %s -> ", partida);
-                currentStop = line->nextStop;
-
-                while (strcmp(currentStop->stop.name, partida) != 0)
-                {
-                    currentStop = currentStop->nextStop;
-                }
-
-                while (currentStop != NULL)
-                {
-                    currentStop = currentStop->prevStop;
-                    if (strcmp(currentStop->stop.name, destino) == 0)
-                    {
-                        break;
-                    }
-                    printf("%s -> ", currentStop->stop.name);
-                }
-
-                printf("%s ]\n\n", destino); // Print 'partida' as the destination
+                if (strcmp(currentStop->stop.name, partida) != 0 && strcmp(currentStop->stop.name, destino) != 0)
+                    strcpy(possibleConnection[j - skip], currentStop->stop.name);
+                else
+                    skip++;
+                currentStop = currentStop->nextStop;
             }
-            else
+
+            LineList *currentLine = firstLine;
+            int direct = 0;
+
+            while (currentLine != NULL)
             {
-                printf("\nLinha %s\n", line->name);
-                printf("[ %s -> ", partida);
-                currentStop = line->nextStop;
-                while (strcmp(currentStop->stop.name, partida) != 0)
+
+                Line *line = &(currentLine->line);
+                if (linhaPartida != line)
                 {
-                    currentStop = currentStop->nextStop;
-                }
-                while (currentStop != NULL)
-                {
-                    currentStop = currentStop->nextStop;
-                    if (strcmp(currentStop->stop.name, destino) == 0)
+                    LineStop *currentStop = line->nextStop;
+                    int invert = 0, invert2 = 0, j;
+                    direct = 1;
+                    for (j = 0; j < connectionCount; j++)
                     {
-                        break;
+                        invert = 0, invert2 = 0;
+                        ;
+                        encontrarPercursoDireto(currentStop, possibleConnection[j], destino, &direct, &invert);
+                        if (direct > 1)
+                        {
+                            int trash = 0;
+                            changeLine++;
+                            encontrarPercursoDireto(linhaPartida->nextStop, partida, possibleConnection[j], &trash, &invert2);
+
+                            printf("\n\n   ------- Opcao %d -------", changeLine);
+                            printLine(*linhaPartida, partida, possibleConnection[j], 0, invert2);
+                            printLine(*line, possibleConnection[j], destino, 0, invert);
+                            direct--;
+                        }
                     }
-                    printf("%s -> ", currentStop->stop.name);
                 }
-                printf("%s ]\n\n", destino);
+
+                currentLine = currentLine->nextLine;
             }
-            direct--;
         }
-
         currentLine = currentLine->nextLine;
     }
-
-    if (!direct)
+    if (!changeLine)
     {
-        printf("Nao existe percurso direto\n\n");
+        system("cls");
+        printf("\nNao existe percurso com troca de linha\n\n");
     }
+}
+
+void calcularPercurso(LineList *firstLine, char partida[], char destino[])
+{
+    system("cls");
+    mostrarPercursoDireto(firstLine, partida, destino);
+    mostrarPercursoComEscala(firstLine, partida, destino);
 }

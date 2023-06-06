@@ -319,31 +319,30 @@ int main()
             break;
         case 3: // "Percursos"
             system("cls");
-            printf("\n--Percursos--\n");
-            printf("1 - Calcular Percurso\n");
-            printf("2 - Adicionar nova paragem\n");
+            printf("\n--Calcular Percurso--\n");
+            char pontoPartida[MAX_NAME_LENGTH];
+            char destino[MAX_NAME_LENGTH];
+            printf("\n\n1 - Calcular Percurso Direto\n");
+            printf("2 - Calcular Percurso com Escala\n");
             printf("3 - Voltar ao menu principal\n");
             scanf("%d", &choice);
 
             switch (choice)
             {
-            case 1:
+            case 1: // Percursos diretos
                 system("cls");
-                char pontoPartida[MAX_NAME_LENGTH];
-                char destino[MAX_NAME_LENGTH];
-
                 getName(pontoPartida, "Insira o ponto de Partida:");
                 getName(destino, "Insira o seu Destino:");
-
-                calcularPercurso(firstLine, pontoPartida, destino);
+                mostrarPercursoDireto(firstLine, pontoPartida, destino);
                 break;
 
-            case 2: // Apagar paragem
+            case 2: // Percursos com escala
                 system("cls");
-                printStops(stops, numStops);
-                printf("\n--- Apagar Paragem ---\n");
-                stops = deleteStop(stops, &numStops, firstLine);
+                getName(pontoPartida, "Insira o ponto de Partida:");
+                getName(destino, "Insira o seu Destino:");
+                mostrarPercursoComEscala(firstLine, pontoPartida, destino);
                 break;
+
             case 3: // Back to main menu
                 system("cls");
                 printf("\n--- Back to main menu ---\n");

@@ -9,38 +9,68 @@
 #include "lines.h"
 #include "stops.h"
 
-void printLine(Line line)
+void printLine(Line line, char start[], char finish[], int full, int reverse)
 {
-    printf("\n Linha %s - %d Paragens\n", line.name, line.nStops);
-    LineStop *stop = line.nextStop;
-
-    printf("[ %s", stop->stop.name);
-    stop = stop->nextStop;
-    for (int i = 1; i < line.nStops; i++)
+    LineStop *currentStop = line.nextStop;
+    if (full)
     {
-        printf("  <>  %s", stop->stop.name);
+        printf("\n Linha %s - %d Paragens\n", line.name, line.nStops);
+        LineStop *stop = line.nextStop;
+
+        printf("[ %s", stop->stop.name);
         stop = stop->nextStop;
+        for (int i = 1; i < line.nStops; i++)
+        {
+            printf("  <>  %s", stop->stop.name);
+            stop = stop->nextStop;
+        }
+        printf(" ]\n");
     }
-    printf(" ]\n");
-}
-
-void printLineReverse(Line line)
-{
-    printf("\n Linha %s - %d Paragens\n", line.name, line.nStops);
-    LineStop *stop = line.nextStop;
-    while (stop->nextStop != NULL)
+    else if (reverse)
     {
-        stop = stop->nextStop;
-    }
+        printf("\nLinha %s\n", line.name);
+        printf("[ %s -> ", start);
+        currentStop = line.nextStop;
 
-    printf("[ %s", stop->stop.name);
-    stop = stop->prevStop;
-    for (int i = 1; i < line.nStops; i++)
-    {
-        printf("  <>  %s", stop->stop.name);
-        stop = stop->prevStop;
+        while (strcmp(currentStop->stop.name, start) != 0)
+        {
+            currentStop = currentStop->nextStop;
+        }
+
+        while (currentStop != NULL)
+        {
+            currentStop = currentStop->prevStop;
+            if (strcmp(currentStop->stop.name, finish) == 0)
+            {
+                break;
+            }
+            printf("%s -> ", currentStop->stop.name);
+        }
+
+        printf("%s ]\n\n", finish);
     }
-    printf(" ]\n");
+    else
+    {
+        printf("\nLinha %s\n", line.name);
+        printf("[ %s -> ", start);
+        currentStop = line.nextStop;
+        while (strcmp(currentStop->stop.name, start) != 0)
+        {
+            currentStop = currentStop->nextStop;
+        }
+
+        while (currentStop != NULL)
+        {
+            currentStop = currentStop->nextStop;
+            if (strcmp(currentStop->stop.name, finish) == 0)
+            {
+                break;
+            }
+            printf("%s -> ", currentStop->stop.name);
+        }
+
+        printf("%s ]\n\n", finish);
+    }
 }
 
 Line *printAllLines(LineList *first)
@@ -68,7 +98,7 @@ Line *printAllLines(LineList *first)
             if (choice == i)
             {
                 system("cls");
-                printLine(currentLine->line);
+                printLine(currentLine->line, NULL, NULL, 1, 0);
                 return &(currentLine->line);
             }
             currentLine = currentLine->nextLine;
@@ -141,7 +171,7 @@ Line addLine(Stop *tab, int numStops, LineList *firstLine)
         saveStop = stop;
     }
     system("cls");
-    printLine(*l);
+    printLine(*l, NULL, NULL, 1, 0);
     return *l;
 }
 
@@ -315,7 +345,7 @@ Line *updateLine(Line *selectedLine, Stop *tab, int numStops)
             system("cls");
             if (numStops > selectedLine->nStops)
             {
-                printLine(*selectedLine);
+                printLine(*selectedLine, NULL, NULL, 1, 0);
                 int posicaoEscolhida = 1;
                 do
                 {

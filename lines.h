@@ -32,7 +32,7 @@ struct LineList
     LineList *nextLine;
 };
 
-void printLine(Line line);
+void printLine(Line line, char start[], char finish[], int full, int reverse);
 Line *printAllLines(LineList *first);
 Line addLine(Stop *tab, int numStops, LineList *firstLine);
 LineStop *addStopToLine(Line *line, Stop *tab, int numStops, int pos);
