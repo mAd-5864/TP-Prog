@@ -9,6 +9,14 @@
 #include "lines.h"
 #include "stops.h"
 
+void strtrim(char *str) {
+    int len = strlen(str);
+    while (len > 0 && isspace((unsigned char)str[len - 1])) {
+        str[len - 1] = '\0';
+        len--;
+    }
+}
+
 void printLine(Line line, char start[], char finish[], int full, int reverse)
 {
     LineStop *currentStop = line.nextStop;
@@ -159,7 +167,7 @@ Line addLine(Stop *tab, int numStops, LineList *firstLine)
     LineStop *saveStop = NULL;
     for (int i = 0; i < l->nStops; i++)
     {
-        LineStop *stop = addStopToLine(l, tab, numStops, 0);
+        LineStop *stop = addStopToLine(l, tab, numStops, 0, NULL);
         if (saveStop == NULL)
         {
             l->nextStop = stop;
@@ -175,7 +183,7 @@ Line addLine(Stop *tab, int numStops, LineList *firstLine)
     return *l;
 }
 
-LineStop *addStopToLine(Line *line, Stop *tab, int numStops, int pos)
+LineStop *addStopToLine(Line *line, Stop *tab, int numStops, int pos, char newStopCode[])
 {
     LineStop *newStop = malloc(sizeof(LineStop));
     if (newStop == NULL)
@@ -191,11 +199,18 @@ LineStop *addStopToLine(Line *line, Stop *tab, int numStops, int pos)
     do
     {
         flag = 0;
-        printStops(tab, numStops);
-        printf("\nIntroduza o codigo da paragem: ");
         char codeToAdd[MAX_CODE_LENGTH + 1];
-        fflush(stdin);
-        scanf("%4s", codeToAdd);
+        if (newStopCode == NULL)
+        {
+            printStops(tab, numStops);
+            printf("\nIntroduza o codigo da paragem: ");
+            fflush(stdin);
+            scanf("%4s", codeToAdd);
+        }
+        else
+        {
+            strcpy(codeToAdd, newStopCode);
+        }
 
         LineStop *p = line->nextStop;
         for (int i = 0; i < numStops; i++)
@@ -356,7 +371,7 @@ Line *updateLine(Line *selectedLine, Stop *tab, int numStops)
                     printf("\nEscolha a posicao da nova Paragem (1-%d):", selectedLine->nStops + 1);
                     scanf("%d", &posicaoEscolhida);
                 } while (posicaoEscolhida < 1 || posicaoEscolhida > selectedLine->nStops + 1);
-                addStopToLine(selectedLine, tab, numStops, posicaoEscolhida);
+                addStopToLine(selectedLine, tab, numStops, posicaoEscolhida, NULL);
             }
             else
             {
@@ -415,6 +430,88 @@ void *deleteLine(LineList **first, Line *selectedLine)
     }
     printf("Linha %s apagada", selectedLine->name);
     freeLine(selectedLine);
+}
+
+void readLineFromFile(LineList *firstLine, Stop **tab, int *numStops)
+{
+    printf("\nIntroduza o nome do ficheiro que pretende ler: ");
+    char filename[MAX_NAME_LENGTH];
+    char ext[5] = ".txt"; // Extensao do ficheiro
+    scanf("%s", &filename);
+    strcat(filename, ext);
+    FILE *ficheiro = fopen(filename, "r");
+    if (ficheiro == NULL)
+    {
+        system("cls");
+        printf("Erro ao abrir o ficheiro.\n");
+        return;
+    }
+
+    char lineName[MAX_NAME_LENGTH];
+    fgets(lineName, sizeof(lineName), ficheiro);
+    lineName[strcspn(lineName, "\n")] = '\0';
+
+    Line *newLine = (Line *)malloc(sizeof(Line));
+    strcpy(newLine->name, lineName);
+    newLine->nextStop = NULL;
+    newLine->nStops = 0;
+
+    char stopRow[1000];
+    while (fgets(stopRow, sizeof(stopRow), ficheiro) != NULL)
+    {
+        newLine->nStops++;
+        stopRow[strcspn(stopRow, "\n")] = '\0';
+
+        char stopName[MAX_NAME_LENGTH];
+        char stopCode[MAX_CODE_LENGTH + 1];
+
+        if (sscanf(stopRow, "%[^#]#%s", stopName, stopCode) == 2)
+        {
+            strtrim(stopName);
+
+            Stop newStop;
+            strncpy(newStop.name, stopName, sizeof(newStop.name) - 1);
+            newStop.name[sizeof(newStop.name) - 1] = '\0';
+            strncpy(newStop.codigo, stopCode, sizeof(newStop.codigo) - 1);
+            newStop.codigo[sizeof(newStop.codigo) - 1] = '\0';
+
+            // Realocar o array dinâmico de paragens
+            *numStops += 1;
+            *tab = (Stop *)realloc(*tab, (*numStops) * sizeof(Stop));
+            if (*tab == NULL)
+            {
+                printf("Erro ao alocar memória para o array de paragens.\n");
+                fclose(ficheiro);
+                return;
+            }
+
+            // Adicionar a nova paragem ao array dinâmico
+            (*tab)[*numStops - 1] = newStop;
+            addStopToLine(newLine, *tab, *numStops, 0, newStop.codigo);
+        }
+    }
+
+    LineList *currentLine = (LineList *)malloc(sizeof(LineList));
+    currentLine->line = *newLine;
+    currentLine->nextLine = NULL;
+
+    if (firstLine == NULL)
+    {
+        firstLine = currentLine;
+    }
+    else
+    {
+        LineList *last = firstLine;
+        while (last->nextLine != NULL)
+        {
+            last = last->nextLine;
+        }
+        last->nextLine = currentLine;
+    }
+
+    fclose(ficheiro);
+    system("cls");
+    printf("\nLinha %s adicionada ao sistema com sucesso.\n", newLine->name);
 }
 
 void freeLine(Line *line)

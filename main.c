@@ -70,6 +70,7 @@ void guardarDados(LineList *firstLine, Stop *stops, int numStops, const char *fi
     fclose(file);
     printf("Dados gravados com sucesso no ficheiro %s\n", filename);
 }
+
 int main()
 {
     system("cls");
@@ -229,7 +230,8 @@ int main()
             printf("2 - Adicionar nova Linha\n");
             printf("3 - Atualizar Linha existente\n");
             printf("4 - Apagar Linha existente\n");
-            printf("5 - Voltar ao menu principal\n");
+            printf("5 - Adicionar nova Linha por Ficheiro\n");
+            printf("6 - Voltar ao menu principal\n");
             scanf("%d", &choice);
 
             switch (choice)
@@ -306,7 +308,14 @@ int main()
                 choice = 0;
                 break;
 
-            case 5: // Back to main menu
+            case 5: // Adicionar Linha por Ficheiro
+                system("cls");
+
+                readLineFromFile(firstLine, &stops, &numStops);
+                numLines++;
+                break;
+
+            case 6: // Back to main menu
                 system("cls");
                 printf("\n--- Back to main menu ---\n");
                 choice = 0;

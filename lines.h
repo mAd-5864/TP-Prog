@@ -35,10 +35,11 @@ struct LineList
 void printLine(Line line, char start[], char finish[], int full, int reverse);
 Line *printAllLines(LineList *first);
 Line addLine(Stop *tab, int numStops, LineList *firstLine);
-LineStop *addStopToLine(Line *line, Stop *tab, int numStops, int pos);
+LineStop *addStopToLine(Line *line, Stop *tab, int numStops, int pos, char newStopCode[]);
 void removeStopFromLine(Line *line);
 Line *updateLine(Line *selectedLine, Stop *tab, int numStops);
 void *deleteLine(LineList **first, Line *selectedLine);
 Stop *deleteStop(Stop *stops, int *numStops, LineList *firstLine);
+void readLineFromFile(LineList *firstLine, Stop **tab, int *numStops);
 void freeLine(Line *line);
 #endif

@@ -88,7 +88,7 @@ void mostrarPercursoDireto(LineList *firstLine, char partida[], char destino[])
 void mostrarPercursoComEscala(LineList *firstLine, char partida[], char destino[])
 {
     system("cls");
-    printf("\nPercursos com troca de linha:\n");
+    printf("\nPercursos com Escala:\n");
     int changeLine = 0;
     LineList *currentLine = firstLine;
     while (currentLine != NULL)
@@ -145,11 +145,11 @@ void mostrarPercursoComEscala(LineList *firstLine, char partida[], char destino[
                         encontrarPercursoDireto(currentStop, possibleConnection[j], destino, &direct, &invert);
                         if (direct > 1)
                         {
+                            changeLine = 1;
                             int trash = 0;
-                            changeLine++;
                             encontrarPercursoDireto(linhaPartida->nextStop, partida, possibleConnection[j], &trash, &invert2);
 
-                            printf("\n\n   ------- Opcao %d -------", changeLine);
+                            printf("\n\n   ------- Linha %s -> Linha %s -------", linhaPartida->name, line->name);
                             printLine(*linhaPartida, partida, possibleConnection[j], 0, invert2);
                             printLine(*line, possibleConnection[j], destino, 0, invert);
                             direct--;
@@ -165,7 +165,7 @@ void mostrarPercursoComEscala(LineList *firstLine, char partida[], char destino[
     if (!changeLine)
     {
         system("cls");
-        printf("\nNao existe percurso com troca de linha\n\n");
+        printf("\nNao existe percurso com Escala\n\n");
     }
 }
 
