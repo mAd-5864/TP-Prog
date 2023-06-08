@@ -156,12 +156,13 @@ int main()
     }
     do
     {
+        fflush(stdin);
         printf("\n\n--- MENU ---\n");
         printf("1 - Paragens\n");
         printf("2 - Linhas\n");
         printf("3 - Percursos\n");
         printf("4 - Exit\n");
-        scanf("%d", &choice);
+        scanf(" %d", &choice);
 
         switch (choice)
         {
@@ -172,7 +173,7 @@ int main()
             printf("2 - Adicionar nova paragem\n");
             printf("3 - Remover paragem existente\n");
             printf("4 - Voltar ao menu principal\n");
-            scanf("%d", &choice);
+            scanf(" %d", &choice);
 
             switch (choice)
             {
@@ -370,7 +371,7 @@ int main()
             guardarDados(firstLine, stops, numStops, "metromondego.dat");
             break;
         default:
-            printf("\nOpção inválida. Tente outra vez.\n");
+            printf("\nOpcao invalida. Tente outra vez.\n");
         }
     } while (choice != 4);
 
