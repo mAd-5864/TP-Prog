@@ -9,9 +9,11 @@
 #include "lines.h"
 #include "stops.h"
 
-void strtrim(char *str) {
+void strtrim(char *str)
+{
     int len = strlen(str);
-    while (len > 0 && isspace((unsigned char)str[len - 1])) {
+    while (len > 0 && isspace((unsigned char)str[len - 1]))
+    {
         str[len - 1] = '\0';
         len--;
     }
@@ -348,6 +350,7 @@ Line *updateLine(Line *selectedLine, Stop *tab, int numStops)
     int choice;
     do
     {
+        fflush(stdin);
         printf("\n--- Atualizar Linha ---\n");
         printf("\n1 - Adicionar Paragem");
         printf("\n2 - Remover Paragem");
@@ -398,6 +401,7 @@ Line *updateLine(Line *selectedLine, Stop *tab, int numStops)
             break;
 
         default:
+            system("cls");
             printf("\nOpção inválida. Tente outra vez.\n");
             choice = 0;
             break;

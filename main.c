@@ -162,6 +162,7 @@ int main()
         printf("2 - Linhas\n");
         printf("3 - Percursos\n");
         printf("4 - Exit\n");
+        choice = 0;
         scanf(" %d", &choice);
 
         switch (choice)
@@ -173,6 +174,7 @@ int main()
             printf("2 - Adicionar nova paragem\n");
             printf("3 - Remover paragem existente\n");
             printf("4 - Voltar ao menu principal\n");
+            choice = 0;
             scanf(" %d", &choice);
 
             switch (choice)
@@ -219,6 +221,7 @@ int main()
                 break;
 
             default:
+                system("cls");
                 printf("\nOpção inválida. Tente outra vez.\n");
                 break;
             }
@@ -233,6 +236,7 @@ int main()
             printf("4 - Apagar Linha existente\n");
             printf("5 - Adicionar nova Linha por Ficheiro\n");
             printf("6 - Voltar ao menu principal\n");
+            choice = 0;
             scanf("%d", &choice);
 
             switch (choice)
@@ -323,6 +327,7 @@ int main()
                 break;
 
             default:
+                system("cls");
                 printf("\nOpção inválida. Tente outra vez.\n");
                 break;
             }
@@ -335,6 +340,7 @@ int main()
             printf("\n\n1 - Calcular Percurso Direto\n");
             printf("2 - Calcular Percurso com Escala\n");
             printf("3 - Voltar ao menu principal\n");
+            choice = 0;
             scanf("%d", &choice);
 
             switch (choice)
@@ -356,10 +362,10 @@ int main()
             case 3: // Back to main menu
                 system("cls");
                 printf("\n--- Back to main menu ---\n");
-                choice = 0;
                 break;
 
             default:
+                system("cls");
                 printf("\nOpção inválida. Tente outra vez.\n");
                 break;
             }
@@ -371,6 +377,7 @@ int main()
             guardarDados(firstLine, stops, numStops, "metromondego.dat");
             break;
         default:
+            system("cls");
             printf("\nOpcao invalida. Tente outra vez.\n");
         }
     } while (choice != 4);
