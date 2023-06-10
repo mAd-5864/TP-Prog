@@ -42,16 +42,7 @@ Stop addStop()
 {
     Stop p;
 
-    printf("Nome da Paragem: ");
-    fflush(stdin);
-    if (fgets(p.name, sizeof(p.name), stdin) != NULL)
-    {
-        size_t len = strlen(p.name);
-        if (len > 0 && p.name[len - 1] == '\n')
-        {
-            p.name[--len] = '\0';
-        }
-    }
+    getName(p.name, "Nome da Paragem:");
     char *code = generateCode(p.name);
     strcpy(p.codigo, code);
     p.valid = 1;

@@ -10,5 +10,4 @@ void encontrarPercursoDireto(LineStop *currentStop, char partida[], char destino
 void mostrarPercursoDireto(LineList *firstLine, char partida[], char destino[]);
 void mostrarPercursoComEscala(LineList *firstLine, char partida[], char destino[]);
 void calcularPercurso(LineList *firstLine, char partida[], char destino[]);
-void getName(char* name, const char* message);
 #endif

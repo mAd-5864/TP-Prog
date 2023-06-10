@@ -1,7 +1,7 @@
 // Pedro Teixeira Amorim
 // 2022157609
 
-// x
+// gcc main.c stops.c lines.c percursos.c -o metromondego
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -161,7 +161,7 @@ int main()
         printf("1 - Paragens\n");
         printf("2 - Linhas\n");
         printf("3 - Percursos\n");
-        printf("4 - Exit\n");
+        printf("4 - Sair\n");
         choice = 0;
         scanf(" %d", &choice);
 
