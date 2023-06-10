@@ -33,6 +33,7 @@ struct LineList
 };
 
 void printLine(Line line, char start[], char finish[], int full, int reverse);
+void searchLineByStop(LineList *firstLine);
 Line *printAllLines(LineList *first);
 Line addLine(Stop *tab, int numStops, LineList *firstLine);
 LineStop *addStopToLine(Line *line, Stop *tab, int numStops, int pos, char newStopCode[]);

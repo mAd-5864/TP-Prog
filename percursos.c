@@ -8,20 +8,6 @@
 #include "lines.h"
 #include "stops.h"
 
-void getName(char *name, const char *message)
-{
-    printf("\n%s ", message);
-    fflush(stdin);
-    if (fgets(name, MAX_NAME_LENGTH, stdin) != NULL)
-    {
-        size_t len = strlen(name);
-        if (len > 0 && name[len - 1] == '\n')
-        {
-            name[--len] = '\0';
-        }
-    }
-}
-
 void encontrarPercursoDireto(LineStop *currentStop, char partida[], char destino[], int *direct, int *invert)
 {
     int partidaFound = 0, destinoFound = 0, i = 0;

@@ -9,6 +9,20 @@
 #include "stops.h"
 #include "lines.h"
 
+void getName(char *name, const char *message)
+{
+    printf("\n%s ", message);
+    fflush(stdin);
+    if (fgets(name, MAX_NAME_LENGTH, stdin) != NULL)
+    {
+        size_t len = strlen(name);
+        if (len > 0 && name[len - 1] == '\n')
+        {
+            name[--len] = '\0';
+        }
+    }
+}
+
 char *generateCode(char name[]) // Função para  gerar os codigos alfanumeéricos
 {
     srand(time(NULL)); // Seed random number generator
@@ -104,4 +118,3 @@ Stop *deleteStop(Stop *stops, int *numStops, LineList *firstLine)
     }
     return stops;
 }
-

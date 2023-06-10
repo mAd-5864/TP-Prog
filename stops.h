@@ -17,6 +17,7 @@ struct Stop
     char codigo[MAX_CODE_LENGTH + 1];
 };
 
+void getName(char *name, const char *message);
 char *generateCode(char name[]);
 Stop addStop();
 void printStop(Stop stop);

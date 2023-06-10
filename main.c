@@ -1,7 +1,7 @@
 // Pedro Teixeira Amorim
 // 2022157609
 
-// gcc main.c stops.c lines.c percursos.c -o metromondego
+// x
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -245,7 +245,35 @@ int main()
             case 1:
                 system("cls");
                 printf("\n--- Lista das Linhas ---\n\n");
-                printAllLines(firstLine);
+                printf("1 - Ver Todas\n");
+                printf("2 - Procurar por Paragem\n");
+                printf("3 - Voltar ao menu principal\n");
+                choice = 0;
+                scanf("%d", &choice);
+                switch (choice)
+                {
+                case 1:
+                    system("cls");
+                    printf("\n--- Lista das Linhas ---\n\n");
+                    printAllLines(firstLine);
+                    break;
+
+                case 2:
+                    system("cls");
+                    searchLineByStop(firstLine);
+                    break;
+
+                case 3: // Back to main menu
+                    system("cls");
+                    printf("\n--- Back to main menu ---\n");
+                    choice = 0;
+                    break;
+
+                default:
+                    system("cls");
+                    printf("\nOpção inválida. Tente outra vez.\n");
+                    break;
+                }
                 break;
 
             case 2:

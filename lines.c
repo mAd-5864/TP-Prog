@@ -36,34 +36,12 @@ void printLine(Line line, char start[], char finish[], int full, int reverse)
         }
         printf(" ]\n");
     }
-    else if (reverse)
-    {
-        printf("\nLinha %s\n", line.name);
-        printf("[ %s -> ", start);
-        currentStop = line.nextStop;
-
-        while (strcmp(currentStop->stop.name, start) != 0)
-        {
-            currentStop = currentStop->nextStop;
-        }
-
-        while (currentStop != NULL)
-        {
-            currentStop = currentStop->prevStop;
-            if (strcmp(currentStop->stop.name, finish) == 0)
-            {
-                break;
-            }
-            printf("%s -> ", currentStop->stop.name);
-        }
-
-        printf("%s ]\n\n", finish);
-    }
     else
     {
         printf("\nLinha %s\n", line.name);
         printf("[ %s -> ", start);
         currentStop = line.nextStop;
+
         while (strcmp(currentStop->stop.name, start) != 0)
         {
             currentStop = currentStop->nextStop;
@@ -71,7 +49,14 @@ void printLine(Line line, char start[], char finish[], int full, int reverse)
 
         while (currentStop != NULL)
         {
-            currentStop = currentStop->nextStop;
+            if (reverse)
+            {
+                currentStop = currentStop->prevStop;
+            }
+            else
+            {
+                currentStop = currentStop->nextStop;
+            }
             if (strcmp(currentStop->stop.name, finish) == 0)
             {
                 break;
@@ -82,7 +67,26 @@ void printLine(Line line, char start[], char finish[], int full, int reverse)
         printf("%s ]\n\n", finish);
     }
 }
-
+void searchLineByStop(LineList *firstLine)
+{
+    char nomeParagem[MAX_NAME_LENGTH];
+    getName(nomeParagem, "Insira a paragem que procura:");
+    LineList *currentLine = firstLine;
+    while (currentLine != NULL)
+    {
+        Line *line = &(currentLine->line);
+        LineStop *currentStop = line->nextStop;
+        while (currentStop != NULL)
+        {
+            if (strcmp(currentStop->stop.name, nomeParagem) == 0)
+            {
+                printLine(*line, NULL, NULL, 1, 0);
+            }
+            currentStop = currentStop->nextStop;
+        }
+        currentLine = currentLine->nextLine;
+    }
+}
 Line *printAllLines(LineList *first)
 {
     if (first == NULL)
@@ -460,7 +464,7 @@ void readLineFromFile(LineList *firstLine, Stop **tab, int *numStops)
     newLine->nextStop = NULL;
     newLine->nStops = 0;
 
-    char stopRow[1000];
+    char stopRow[100];
     while (fgets(stopRow, sizeof(stopRow), ficheiro) != NULL)
     {
         newLine->nStops++;
