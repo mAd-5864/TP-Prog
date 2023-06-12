@@ -43,7 +43,7 @@ void mostrarPercursoDireto(LineList *firstLine, char partida[], char destino[])
 {
     system("cls");
     LineList *currentLine = firstLine;
-    int direct = 0, notPossible = 1;
+    int direct = 0;
 
     printf("\nPercursos diretos possiveis:\n");
     while (currentLine != NULL)
@@ -58,13 +58,12 @@ void mostrarPercursoDireto(LineList *firstLine, char partida[], char destino[])
         {
             printLine(*line, partida, destino, 0, invert);
             direct--;
-            notPossible = 0;
         }
 
         currentLine = currentLine->nextLine;
     }
 
-    if (notPossible)
+    if (!direct)
     {
         system("cls");
         printf("\nNao existe percurso direto\n\n");
